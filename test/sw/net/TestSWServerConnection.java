@@ -7,18 +7,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import net.SecureObjectSocketInterface;
-import net.SecureServer;
-import net.ServerVulture;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import sw.DemoTestWorld;
-import sw.lifeform.PC;
 import sw.net.msg.SWMessage;
-import sw.net.state.InWorldState;
+import sw.net.msg.SWTokenMsg;
 import sw.net.state.InitialConnectionState;
 
 public class TestSWServerConnection
@@ -35,24 +29,6 @@ public class TestSWServerConnection
     public void after()
     {
         server.shutdown();
-    }
-    
-    @Test
-    public void testAbleToProcessMultipleMessages()
-    {
-        SWServerConnection sc;
-        sc = new MockSWServerConnection(null,null,null,null);
-        SWMessage msg1 = new SWMessage("Test");
-        SWMessage msg2 = new SWMessage("Test");
-        SWMessage msg3 = new SWMessage("Test");
-        
-        sc.sendMessage(msg1);
-        sc.sendMessage(msg2);
-        sc.sendMessage(msg3);
-        
-        assertEquals(msg1,sc.removeNextMessage());
-        assertEquals(msg2,sc.removeNextMessage());
-        assertEquals(msg3,sc.removeNextMessage());
     }
 
     @Test
@@ -193,99 +169,5 @@ public class TestSWServerConnection
             client.writeObject(msg);
         }
     }
-    
-    @Test
-    public void testTimedInformationIsTransmittedAutomticallyToThePlayer() throws IOException, InterruptedException, ClassNotFoundException
-    {
-        
-        
-        SWClientSocket client = new SWClientSocket(null);
 
-        client.connect("127.0.0.1", 2000);
-        client.readObject();  // Have the client process the Token message.
-
-        Thread.sleep(500);
-        
-        SWServerConnection sc = (SWServerConnection) server.getConnections().get(0);
-        
-        DemoTestWorld.constructDemoWorld();
-        PC player = DemoTestWorld.getPlayer1();
-        
-        InWorldState iws = new InWorldState(sc, 0, player);
-        sc.setServerConnectionState(iws);
-        
-        SWMessage msg = new SWMessage("west");
-        iws.executeAction(msg);
-        
-        iws.executeAction(msg);
-        iws.executeAction(msg);
-        
-        Thread.sleep(10000); // Wait for creatures to appear
-        
-        msg = client.readObject();
-        assertEquals("Forest Creature",msg.getMessage());
-    }
-
-}
-
-class MockSWServerConnection extends SWServerConnection
-{
-    public MockSWServerConnection(SecureObjectSocketInterface<SWMessage> wlos, ThreadGroup threadgroup, ServerVulture vulture, SWServer app)
-    {
-        super(wlos, threadgroup, vulture, app);
-    }
-
-    @Override
-    public void closeClient() throws IOException
-    {
-    }
-
-    @Override
-    public SecureObjectSocketInterface<SWMessage> getClient()
-    {
-        return m_client;
-    }
-
-    /**
-     * Listens on the incoming stream for any messages. If a message is received
-     * it checks to see if it is valid then runs getGeneralServerResponse. If
-     * there is a message to send back it sends it back via the out stream. The
-     * streams are then closed and the thread stops.
-     * <p>
-     * 
-     * @see girard.ship.wl.io.msg.SWMessage
-     */
-    public void run()
-    {
-
-    }
-
-    @Override
-    public void addToLog(String str)
-    {
-
-    }
-
-    @Override
-    public void addToLog(Exception e)
-    {
-        
-    }
-
-    protected SecureServer getTheServer()
-    {
-        return m_theServer;
-    }
-
-    @Override
-    public void notifyVulture()
-    {
-
-    }
-
-    @Override
-    public String toString()
-    {
-        return this.getName();
-    }
 }

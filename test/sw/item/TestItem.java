@@ -18,15 +18,6 @@ public class TestItem
         assertEquals("Desc",pack.getDescription());
         assertEquals(10,pack.getSize());
         assertEquals(5,pack.getWeight());
-        assertEquals(-1,pack.getItemID());
-    }
-    
-    @Test
-    public void testSetItemID()
-    {
-        Item pack = new MockItem("Belt","Desc",10,5);
-        pack.setItemID(4);
-        assertEquals(4,pack.getItemID());
     }
 
 }

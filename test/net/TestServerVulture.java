@@ -6,8 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import mock.MockServer;
-
 import org.junit.Test;
 
 public class TestServerVulture

@@ -4,9 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-
-import mock.MockServer;
-import mock.MockServerConnection;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Test;
@@ -50,4 +48,26 @@ public class TestSecureServerConnection
 
 }
 
+class MockServerConnection extends SecureServerConnection
+{
 
+    public MockServerConnection(ThreadGroup threadgroup, String threadname, ServerVulture vulture, SecureServer app)
+    {
+        super(threadgroup, threadname, vulture, app);
+    }
+
+    @Override
+    public void run()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void closeClient() throws IOException
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    
+}

@@ -21,12 +21,6 @@ public class SWReadObjectThread extends Thread
         start();
     }
 
-    /**
-     * Listens for incoming messages on the input stream.  This has been
-     * made into its own thread because this is a blocking read.  Incoming
-     * messages are placed in a queue to be read by the thread's owner for
-     * processing.
-     */
     public void run()
     {
         while (true)
@@ -50,10 +44,6 @@ public class SWReadObjectThread extends Thread
         }
     }
     
-    /**
-     * 
-     * @return The next available message on the queue. If no messages then it returns null.
-     */
     public byte[] getNextMessage()
     {
         if (m_messages.size() > 0)

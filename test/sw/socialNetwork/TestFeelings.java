@@ -229,7 +229,7 @@ public class TestFeelings
      * relationships decay at the proper rate.
      */
     @Test
-    public void testDecayUsingUpdateTime()
+    public void testDecay()
     {
     	Feelings plusFive = new Feelings();
     	Feelings plusFour = new Feelings();
@@ -242,6 +242,7 @@ public class TestFeelings
     	Feelings minusThree = new Feelings();
     	Feelings minusFour = new Feelings();
     	Feelings minusFive = new Feelings();
+    	GameTimer time = new GameTimer("Test timer", 0);
     	
     	plusFive.setIntimacy(100);
     	plusFour.setIntimacy(100);
@@ -267,17 +268,19 @@ public class TestFeelings
     	minusFour.setTrust(-4);
     	minusFive.setTrust(-5);
     	
-    	plusFive.updateTime("Clock", 1);
-    	plusFour.updateTime("Clock", 1);
-    	plusThree.updateTime("Clock", 1);
-    	plusTwo.updateTime("Clock", 1);
-    	plusOne.updateTime("Clock", 1);
-    	zero.updateTime("Clock", 1);
-    	minusOne.updateTime("Clock", 1);
-    	minusTwo.updateTime("Clock", 1);
-    	minusThree.updateTime("Clock", 1);
-    	minusFour.updateTime("Clock", 1);
-    	minusFive.updateTime("Clock", 1);
+    	time.addTimeObserver(plusFive);
+    	time.addTimeObserver(plusFour);
+    	time.addTimeObserver(plusThree);
+    	time.addTimeObserver(plusTwo);
+    	time.addTimeObserver(plusOne);
+    	time.addTimeObserver(zero);
+    	time.addTimeObserver(minusOne);
+    	time.addTimeObserver(minusTwo);
+    	time.addTimeObserver(minusThree);
+    	time.addTimeObserver(minusFour);
+    	time.addTimeObserver(minusFive);
+
+    	time.timeChanged();
     	
     	assertEquals(99, plusFive.getIntimacy());
     	assertEquals(99, plusFour.getIntimacy());

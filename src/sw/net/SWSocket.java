@@ -63,7 +63,7 @@ public abstract class SWSocket extends SecureObjectSocket<SWMessage>
      */
     public void initializeMessage(SWMessage msg)
     {
-        msg.setSecurityToken(m_token);
+        msg.setToken(m_token);
     }
 
     public boolean isValidMessage(SWMessage msg)
@@ -71,9 +71,6 @@ public abstract class SWSocket extends SecureObjectSocket<SWMessage>
         return msg.containsValidMsg(m_token);
     }
 
-    /**
-     * Sends a message across the connection.
-     */
     public void writeObject(SWMessage obj) throws IOException
     {
         initializeMessage(obj);
@@ -83,11 +80,6 @@ public abstract class SWSocket extends SecureObjectSocket<SWMessage>
         m_out.flush();
     }
 
-    /**
-     * Reads the next message that was sent over the connect.  Because we can't avoid
-     * blocking this is done by checking the incoming queue of a thread that constantly checks
-     * for new messages and reads the next message off the queue.
-     */
     public SWMessage readObject() throws IOException, ClassNotFoundException
     {
         SWMessage incomingMessage = null;
@@ -103,7 +95,7 @@ public abstract class SWSocket extends SecureObjectSocket<SWMessage>
             {
                 incomingMessage = new SWErrorMsg("Illegal Message");
             }
-            else if (incomingMessage instanceof SWTokenMsg)  // TODO: This message should be handled by the internal network system?
+            else if (incomingMessage instanceof SWTokenMsg)  // This message should be handled by the internal network system.
             {
                 this.setToken(((SWTokenMsg)incomingMessage).getNewToken());
                 incomingMessage = null;

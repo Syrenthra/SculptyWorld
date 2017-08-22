@@ -1,5 +1,6 @@
 package sw.net.state;
 
+import sw.DemoWorld;
 import sw.net.SWServerConnection;
 import sw.net.msg.SWMessage;
 
@@ -18,7 +19,11 @@ public class InitialConnectionState extends ServerConnectionState
             m_connection.setServerConnectionState(new RegisterNameState(m_connection));
         else if (msg.getMessage().equals("Login"))
             m_connection.setServerConnectionState(new LoginNameState(m_connection));
-
+        else if (msg.getMessage().equals("Demo"))
+        {
+            DemoWorld.constructDemoWorld();
+            m_connection.setServerConnectionState(new InWorldState(m_connection));
+        }
     }
 
     @Override

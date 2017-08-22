@@ -10,9 +10,6 @@ import java.util.Vector;
  */
 public class ItemContainer extends Item
 {
-    public static final String CAP = "CAPACITY";
-    public static final String ITEMS = "ITEMS";
-    public static final String WEAR_LOC = "WEAR_LOC";
     /**
      * How much this container can hold in cm^3.
      */
@@ -24,9 +21,9 @@ public class ItemContainer extends Item
     private Vector<Item> m_items = new Vector<Item>();
     
     /**
-     * Where can I equip this storage container.  ContainerLocation.BACK is the default value.
+     * Where can I equip this storage container.
      */
-    private ContainerLocation m_location = ContainerLocation.BACK;
+    private Hashtable<ContainerLocation,ContainerLocation> m_validLocations = new Hashtable<ContainerLocation,ContainerLocation>();
     
     /**
      * Constructs and ItemContainer.
@@ -38,7 +35,6 @@ public class ItemContainer extends Item
     {
         super(name,desc,size,weight);
         m_capacity = capacity;
-        m_type = Item.CONTAINER;
     }
 
     /**
@@ -57,16 +53,25 @@ public class ItemContainer extends Item
      */
     public boolean validLocation(ContainerLocation location)
     {  
-        return m_location == location;
+        return m_validLocations.containsKey(location);
     }
     
     /**
      * Adds a valid equip location.
      * @param location
      */
-    public void setValidLocation(ContainerLocation location)
+    public void addValidLocation(ContainerLocation location)
     {
-        m_location = location;
+        m_validLocations.put(location, location);
+    }
+    
+    /**
+     * Removes that location as a valid location.
+     * @param location
+     */
+    public void removeValidLocation(ContainerLocation location)
+    {
+        m_validLocations.remove(location);
     }
 
     /**
@@ -130,124 +135,5 @@ public class ItemContainer extends Item
             amountStored += item.getSize();
         }
         return Math.max(amountStored, m_size); 
-    }
-    
-    /**
-     * Returns the information about the ItemContainer as well as a list of items it contains.
-     * The list of items is represented as a Vector of ints.  If the container contains a container
-     * then just the id for that container is stored.
-     */
-    @Override
-    public Hashtable<String,Object> getItemInfo()
-    {
-        Hashtable<String,Object> data = super.getItemInfo();
-        
-        data.put(CAP, m_capacity);
-
-        Vector<Integer> items = new Vector<Integer>();
-        for (Item item : m_items)
-        {
-            items.addElement(item.getItemID());   
-        }
-        data.put(ITEMS, items);
-        
-        data.put(WEAR_LOC,m_location.name());
-        
-        return data;
-    }
-    
-    /**
-     * 
-     * @param data
-     * @return
-     */
-    public static ItemContainer constructItemContainer(Hashtable<String,Object> data)
-    {
-        String name = (String)data.get(NAME);
-        String desc = (String)data.get(DESC);
-        int size = (Integer)data.get(SIZE);
-        int weight = (Integer)data.get(WEIGHT);
-        int capacity = (Integer)data.get(CAP);
-        
-        ItemContainer item = new ItemContainer(name, desc, size, weight, capacity);
-        int id = (Integer)data.get(ID);
-        item.setItemID(id);
-        
-        String loc = (String)data.get(WEAR_LOC);
-        item.setValidLocation(ContainerLocation.valueOf(loc));
-               
-        return item;
-    }
-
-    /**
-     * 
-     * @return All items in the container stored in a Vector.
-     */
-    public Vector<Item> getItems()
-    {
-        Vector<Item> items = new Vector<Item>(); // So we can't mess up the actual Vector.
-        
-        for (Item item : m_items)
-        {
-            items.add(item);
-        }
-        
-        return items;
-    }
-
-    /**
-     * Removes the first item from the container whose name matches the string provided.
-     * @param string
-     * @return The item removed from the container.
-     */
-    public Item removeItem(String itemName)
-    {
-        Item item = null;
-        for (int x=0;x<m_items.size();x++)
-        {
-            if (m_items.elementAt(x).getName().equals(itemName))
-            {
-                item = m_items.remove(x);
-                break;
-            }
-        }
-        return item;
-    }
-
-    /**
-     * Removes theitem from the container whose id matches the id provided.
-     * @param i
-     * @return The item removed from the container.
-     */
-    public Item removeItem(int itemID)
-    {
-        Item item = null;
-        for (int x=0;x<m_items.size();x++)
-        {
-            if (m_items.elementAt(x).getItemID() ==  itemID)
-            {
-                item = m_items.remove(x);
-                break;
-            }
-        }
-        return item;
-    }
-
-    /**
-     * Returns the location where we can equip this container.
-     * @return
-     */
-    public ContainerLocation getValidLocation()
-    {
-        return m_location;
-    }
-    
-    /**
-     * Makes a copy of this ItemContainer.
-     */
-    @Override
-    public ItemContainer clone()
-    {
-        return new ItemContainer(m_name, m_description, m_size, m_weight, m_capacity);
     }
 }

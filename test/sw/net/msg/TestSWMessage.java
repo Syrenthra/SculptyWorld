@@ -19,7 +19,7 @@ public class TestSWMessage
         assertTrue(msg.containsValidMsg(null));
         SWToken token = SWToken.constructToken();
         SWToken token2 = new SWToken(token.toString().toCharArray());
-        msg.setSecurityToken(token);
+        msg.setToken(token);
         assertTrue(msg.containsValidMsg(token2));
         assertFalse(msg.containsValidMsg(SWToken.constructToken()));
     }

@@ -1,6 +1,5 @@
 package sw.lifeform;
 
-import java.util.Hashtable;
 import java.util.Vector;
 
 import sw.combat.Effect;
@@ -9,8 +8,6 @@ import sw.environment.Exit;
 import sw.environment.IdGen;
 import sw.environment.TheWorld;
 import sw.environment.Zone;
-import sw.item.Armor;
-import sw.item.ArmorLocation;
 
 /**
  * Used to represent a creature in the game.
@@ -20,10 +17,6 @@ import sw.item.ArmorLocation;
 public class Creature extends Lifeform implements Cloneable
 {
 
-    public static final String DMG = "DMG";
-    public static final String ARMOR = "ARMOR";
-    public static final String SPEED = "SPEED";
-    public static final String ZONES = "ZONES";
     /**
      * Let's the game know if the creature is alive or dead. Dead
      * creatures should be removed from the game.
@@ -145,6 +138,17 @@ public class Creature extends Lifeform implements Cloneable
     }
 
     /**
+     * Compares to creatures to see if they are the same
+     * type.
+     * @param dude3
+     * @return
+     */
+    public boolean isSame(Creature dude)
+    {
+        return m_name.equals(dude.getName());
+    }
+
+    /**
      * Gets an update from the timer every tick. Updates all effects on Player
      * and, if a sufficient number of ticks has passed, picks the next action
      * from the queue.
@@ -176,7 +180,7 @@ public class Creature extends Lifeform implements Cloneable
 
                 for (CreatureResource cr : m_currentRoom.getCreatureResources())
                 {
-                    if (m_resource.getCreature().equals(cr.getCreature()))
+                    if (m_resource.getCreature().isSame(cr.getCreature()))
                         space = false;
                 }
                 if (space)
@@ -258,66 +262,5 @@ public class Creature extends Lifeform implements Cloneable
     {
         m_zones.remove(zone);
 
-    }
-    
-    /**
-     * Gets the information on a Lifeform.
-     */
-    @Override
-    public Hashtable<String,Object> getLifeformInfo()
-    {
-        Hashtable<String,Object> data = super.getLifeformInfo();
-        
-        data.put(DMG, m_damage);
-        data.put(ARMOR, m_armor);
-        data.put(SPEED, m_speed);
-        
-        Vector<String> zones = new Vector<String>();
-        for (Zone zone : m_zones)
-        {
-            zones.addElement(zone.name());
-        }
-        data.put(ZONES, zones);
-        return data;
-    }
-    
-    public static Creature constructCreature(Hashtable<String,Object> data)
-    {
-        int id = (Integer)data.get(ID);
-        String name = (String)data.get(NAME);
-        String desc = (String)data.get(DESC);
-        int maxLife = (Integer)data.get(MAX_LIFE);
-        int damage = (Integer)data.get(DMG);
-        int armor = (Integer)data.get(ARMOR);
-        int speed = (Integer)data.get(SPEED);
-        
-        Creature creature = new Creature(id,name,desc,maxLife,damage,armor,speed);
-        int currentLife = (Integer)data.get(CURRENT_LIFE);
-        creature.setCurrentLifePoints(currentLife);
-        
-        Vector<String> zones = (Vector<String>)data.get(ZONES);
-        for (String zone : zones)
-        {
-            creature.addZone(Zone.valueOf(zone));
-        }
-               
-        return creature;
-    }
-    
-    /**
-     * TODO: Think about establishing a species value that can be used instead.
-     * If two creatures have the same name and description they are considered the same.
-     */
-    @Override
-    public boolean equals(Object obj)
-    {
-        boolean same = false;
-        if (obj instanceof Creature)
-        {
-            Creature creature = (Creature)obj;
-            if ((creature.getName().equals(m_name)) && (creature.getDescription().equals(m_description)))
-                same = true;
-        }
-        return same;
     }
 }

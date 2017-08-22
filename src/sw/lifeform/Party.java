@@ -2,8 +2,8 @@ package sw.lifeform;
 
 import java.util.Vector;
 
+import sw.quest.CreatureQuest;
 import sw.quest.Quest;
-import sw.quest.QuestState;
 
 /**
  * Used to organize one or more players as a group.
@@ -11,89 +11,49 @@ import sw.quest.QuestState;
  * @author cdgira
  *
  */
-public class Party implements PCObserver
+public class Party
 {
-    public static final int MAX_SIZE = 5;
-    /**
-     * Should be a small number so no need for a Hashtable.
-     */
-    protected Vector<PC> m_players = new Vector<PC>();
-    /**
-     * Should be a small number so no need for a Hashtable.
-     */
-    protected Vector<PC> m_joinRequests = new Vector<PC>();
+
+    protected int m_id = -1;
+
+    protected Vector<Player> m_players = new Vector<Player>();
 
     /**
      * This is the constructor.
-     *
+     * @param id
      * @param player
      */
-    public Party(PC player)
+    public Party(int id, Player player)
     {
-        if (player != null)
-        {
-            m_players.add(player);
-            player.addPCObserver(this);
-        }
+        m_id = id;
+        m_players.add(player);
+        player.setParty(this);
     }
 
+    /**
+     * Returns the unique id for this party.
+     * @return
+     */
+    public int getID()
+    {
+        return m_id;
+    }
 
     /**
      * Merges two parties together.  The combined party
      * can't be over 5 members in size.
-     * @param player1
+     * @param player
      */
     public void mergeParties(Party party)
     {
-        if (m_players.size() + party.getSize() <= MAX_SIZE)
+        if (m_players.size() + party.getSize() < 6)
         {
-            PC originalPartyMemberA = m_players.elementAt(0);
-            PC originalPartyMemberB = party.getPlayer(0);
-            Vector<Quest> activeQuests = new Vector<Quest>();
-            
-            // Gather up all the active quests for the party the other party is being merged into.
-            for (Quest quest : originalPartyMemberA.getNativeQuests())
-            {
-                activeQuests.add(quest);
-            }
-            for (Quest quest : originalPartyMemberA.getInheritedQuests())
-            {
-                if (quest.getCurrentState(originalPartyMemberA) == QuestState.IN_PROGRESS)
-                    activeQuests.add(quest);
-            }
-            
-            // Gather up all the active quests for the party being merged into this party
-            for (Quest quest : originalPartyMemberB.getNativeQuests())
-            {
-                activeQuests.add(quest);
-            }
-            for (Quest quest : originalPartyMemberB.getInheritedQuests())
-            {
-                if (quest.getCurrentState(originalPartyMemberB) == QuestState.IN_PROGRESS)
-                    activeQuests.add(quest);
-            }
-            
-           // Since we are merging parties we won't need to make any quests inactive.
-            
-            // Merge all the people into one party.
             while (party.getSize() > 0)
             {
-                PC player = party.removePlayer(0);
-                player.removePCObserver(party);
+                Player player = party.removePlayer(0);
                 m_players.add(player);
-                player.setParty(this);  
-                player.addPCObserver(this);
+                player.setParty(this);
             }
-            
-            // Update all the quests for all the players 
-            for (PC player : m_players)
-            {
-                for (Quest quest : activeQuests)
-                {
-                    player.updateQuests(quest);    
-                }
-            }
-            
         }
 
     }
@@ -104,7 +64,7 @@ public class Party implements PCObserver
      * @param i
      * @return
      */
-    private PC removePlayer(int index)
+    private Player removePlayer(int index)
     {
         return m_players.remove(index);
     }
@@ -123,9 +83,9 @@ public class Party implements PCObserver
      * @param index
      * @return
      */
-    public PC getPlayer(int index)
+    public Player getPlayer(int index)
     {
-        PC player = null;
+        Player player = null;
         if (index < m_players.size())
             player = m_players.get(index);
         return player;
@@ -135,157 +95,33 @@ public class Party implements PCObserver
      * Returns the players in this party.
      * @return
      */
-    public Vector<PC> getPlayers()
+    public Vector<Player> getPlayers()
     {
         return m_players;
     }
 
     /**
-     * This removes a player from a party without updating any of the quests.
-     * @param player
+     * Updates the quest status for all party members that have
+     * a quest related to this creature.
+     * @param deadGuy
      */
-    public void removePlayer(PC player)
+    public void killed(Creature deadGuy)
     {
-        if (m_players.contains(player))
+        for (Player player : m_players)
         {
-            m_players.remove(player);
-            player.removePCObserver(this);
-            Party soloParty = new Party(player);
-            player.setParty(soloParty);
-            player.addPCObserver(soloParty);
-        }
-        
-        // Since player is now solo all of it's inherited quests must be inactive.
-        for (Quest quest : player.getInheritedQuests())
-        {
-            quest.setCurrentState(player, QuestState.INACTIVE);
-        }
-        
-        // Any native quests of the player that just left that no one else has as
-        // native quests should cause all related inherited quests of players still
-        // in the other party to go to INACTIVE.
-        for (Quest quest : player.getNativeQuests())
-        {
-            boolean inactive = true;
-            for (PC member : m_players)
+            for (Quest q : player.getQuests())
             {
-                if (member.getNativeQuests().contains(quest))
+                if (q instanceof CreatureQuest)
                 {
-                    inactive = false;
-                    break;
-                }
-            }
-            if (inactive)
-            {
-                for (PC member : m_players)
-                {
-                    quest.setCurrentState(member, QuestState.INACTIVE);
+                    CreatureQuest cq = (CreatureQuest) q;
+                    if (deadGuy.isSame(cq.getCreature()))
+                    {
+                        cq.updateGoal(player);
+                    }
                 }
             }
         }
-        
-        // Now that we know those to make inactive update the needed quests.
-        
-    }
 
-
-    /**
-     * Will forward PC events to the other PC's in the party.  This will
-     * likely be done by creating Proxy events that will be similar but processed differently
-     * by the receiving objects.
-     * @param event
-     */
-    @Override
-    public void pcUpdate(PCEvent event)
-    {
-        if (event.getType() == PCEvent.NATIVE_QUEST_ADDED)
-        {
-            Quest quest = event.getQuest();
-            for (PC player : m_players)
-            {
-                if (player != event.getPC())
-                {
-                    player.addNativeQuest(quest);
-                    quest.addPlayer(player);
-                }
-            }
-        }
-        
-    }
-
-
-    /**
-     * The leader of the party, should be the person at index 0 of m_players.
-     * @return
-     */
-    public PC getPartyLeader()
-    {
-        if (m_players.size() == 0)
-            return null;
-        else
-            return m_players.elementAt(0);
-    }
-
-
-    /**
-     * This player has made a request to join the party.  This will
-     * be checked by the party leader when the join is accepted.
-     * @param player
-     */
-    public void addJoinRequest(PC player)
-    {
-        if (!m_players.contains(player))
-            m_joinRequests.add(player);
-    }
-
-    /**
-     * Checks to see if this player has made a join request to the party. 
-     * @param player
-     * @return
-     */
-    public boolean hasJoinRequest(String player)
-    {
-        boolean contains = false;
-        for (PC requester : m_joinRequests)
-        {
-            if (requester.getName().equals(player))
-            {
-                contains = true;
-                break;
-            }
-        }
-        return contains;
-    }
-
-
-    /**
-     * Removes this player from the list of those that want to join
-     * the party.
-     * @param player
-     */
-    public void removeJoinRequest(PC player)
-    {
-        m_joinRequests.remove(player);
-    }
-
-
-    /**
-     * 
-     * @param newMemberName
-     * @return
-     */
-    public PC getJoinRequest(String playerName)
-    {
-        PC player = null;
-        for (PC requester : m_joinRequests)
-        {
-            if (requester.getName().equals(playerName))
-            {
-                player = requester;
-                break;
-            }
-        }
-        return player;
     }
 
 }

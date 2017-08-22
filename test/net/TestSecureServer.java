@@ -6,8 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import mock.MockServer;
-
 import org.junit.After;
 import org.junit.Test;
 
@@ -52,4 +50,19 @@ public class TestSecureServer
 
 }
 
+class MockServer extends SecureServer
+{
 
+    public MockServer(String Sname, String TGname, int port)
+    {
+        super(Sname, TGname, port);
+    }
+
+    @Override
+    public void run()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    
+}

@@ -16,33 +16,16 @@ import javax.sql.DataSource;
  */
 public class DatabaseInfo
     {
-    /**
-     * Used to store the information to connect to a database.
-     */
     protected String m_databaseName = null;
 
     protected String m_loginName = null;
 
     protected String m_password = null;
-    
-    /**
-     * Alternative way to store the connect information to the database.
-     */
+
     protected DataSource m_dataSource = null;
 
-    /**
-     * The actual connection to the database.
-     */
     protected Connection m_dbConn = null;
 
-    
-    /**
-     * Used to create a DatabaseInfo instance that connects using
-     * the name, login, and password information stored as Strings.
-     * @param name
-     * @param login
-     * @param pass
-     */
     public DatabaseInfo(String name, String login, String pass)
         {
         m_databaseName = name;
@@ -50,21 +33,11 @@ public class DatabaseInfo
         m_password = pass;
         }
 
-    /**
-     * Used to create a DatabaseInfo instance for connecting to 
-     * a database that uses a DataSource to store all the information.
-     * @param dataSource
-     */
     public DatabaseInfo(DataSource dataSource)
         {
         m_dataSource = dataSource;
         }
 
-    /**
-     * Returns true if connected to the database, false
-     * otherwise.
-     * @return
-     */
     public boolean isConnected()
         {
         boolean connected = false;
@@ -77,9 +50,7 @@ public class DatabaseInfo
         }
 
     /**
-     * If there is no connection to the database it will create one.
-     * If there is a connection already established it will return
-     * that connection.
+     * public Connection getDatabaseConnection() { return m_dbConn; }
      */
     public Connection makeConnection() throws Exception
         {
@@ -119,10 +90,6 @@ public class DatabaseInfo
         return m_dbConn;
         }
     
-    /**
-     * Closes the connection to the database.
-     * @throws SQLException
-     */
     public void closeConnection() throws SQLException
         {
         if (this.isConnected())

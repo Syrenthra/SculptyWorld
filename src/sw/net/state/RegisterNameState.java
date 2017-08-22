@@ -1,8 +1,7 @@
 package sw.net.state;
 
 import database.Query;
-import sw.database.SWQuery;
-import sw.database.req.SWRegisterUserNameQuery;
+import sw.database.SWRegisterNameQuery;
 import sw.net.SWServerConnection;
 import sw.net.msg.SWMessage;
 
@@ -12,7 +11,6 @@ public class RegisterNameState extends ServerConnectionState
     public RegisterNameState(SWServerConnection sc)
     {
         m_connection = sc;
-        m_message = "Please enter a user name:";
     }
 
     @Override
@@ -21,14 +19,14 @@ public class RegisterNameState extends ServerConnectionState
         String name = msg.getMessage();
         if (Query.isValidNameString(name))
         {
-            SWRegisterUserNameQuery query = new SWRegisterUserNameQuery(msg.getSecurityToken(),name);
-            if (query.executeQuery() == SWQuery.SUCCESS)
+            SWRegisterNameQuery query = new SWRegisterNameQuery(m_connection,msg);
+            if (query.executeQuery())
             {
-                m_connection.setServerConnectionState(new RegisterPasswordState(m_connection,name));
+                m_connection.setServerConnectionState(new RegisterPasswordState(m_connection));
             }
             else
             {
-                m_message = "That user name has been taken, please choose another: ";
+                
             }
         }
 
@@ -37,8 +35,8 @@ public class RegisterNameState extends ServerConnectionState
     @Override
     public SWMessage getMessage()
     {
-        SWMessage msg = new SWMessage(m_message);
-        return msg;
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

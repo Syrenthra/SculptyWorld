@@ -18,8 +18,6 @@ import net.SecureServerConnection;
  * The base server class for JAVA applications dealing with Web-Lab.
  * <p>
  * 
- * TODO: Have it keep a list of those actively logged in.  If someone tries to log in twice don't let them.
- * 
  * @author Dudley Girard
  * @version ExNet III 3.1
  * @since JDK1.1
@@ -57,7 +55,7 @@ public class SWServer extends SecureServer
         
         // Setup the Database
         DatabaseManager dbManager = DatabaseManager.getInstance();
-        DatabaseInfo dbInfo = new DatabaseInfo(SWQuery.DB_LOCATION, SWQuery.LOGIN_NAME, SWQuery.PASSWORD);
+        DatabaseInfo dbInfo = new DatabaseInfo("jdbc:mysql://localhost/SculptyWorldDB", "sculpty", "world12Big");
         dbManager.addDB(SWQuery.DATABASE, dbInfo);
 
         m_os = os;

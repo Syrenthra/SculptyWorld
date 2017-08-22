@@ -69,7 +69,7 @@ public class TestSWSocket
     {
         SWToken token = SWToken.constructToken();
         SWMessage msg = new SWMessage("Test");
-        msg.setSecurityToken(SWToken.constructToken());
+        msg.setToken(SWToken.constructToken());
         
         MockSWClientSocket client1 = new MockSWClientSocket();
         client1.setToken(token);

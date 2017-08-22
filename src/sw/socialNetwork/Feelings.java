@@ -9,7 +9,7 @@ import sw.time.TimeObserver;
  * @author David Abrams
  * 
  */
-public class Feelings
+public class Feelings implements TimeObserver
 {
 	static protected final int MAX_INTIMACY = 100;
 	static protected final int MIN_INTIMACY = 1;
@@ -204,6 +204,7 @@ public class Feelings
 	 * @param name not used
 	 * @param time not used
 	 */
+	@Override
 	public void updateTime(String name, int time)
 	{
 		changeIntimacy(-calcDecay());

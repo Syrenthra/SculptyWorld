@@ -36,7 +36,7 @@ public class TestSWServer
     public void testIntialize()
     {  
         // Need to check that the database manager is connected to the right database.
-        assertNotNull(DatabaseManager.getInstance().getDatabaseInfo(SWQuery.DATABASE));
+        assertNotNull(DatabaseManager.getInstance().getDBAddress(SWQuery.DATABASE));
         assertEquals("SWServer",sw.getName());
     }
     

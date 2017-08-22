@@ -4,8 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import sw.quest.MockSocialNPC;
-import sw.quest.SocialCapitolCost;
+import sw.quest.SocialQuestDifficulty;
 
 /**
  * 
@@ -19,9 +18,9 @@ public class TestFavor
 	public void testFavor()
 	{
 		MockSocialNPC snpc = new MockSocialNPC();
-		Favor2 fav = new Favor2(snpc, SocialCapitolCost.EXTREME);
+		Favor fav = new Favor(snpc, SocialQuestDifficulty.YOUMUSTBEPRO);
 		
 		assertEquals(snpc, fav.getRequester());
-		assertEquals(SocialCapitolCost.EXTREME, fav.getDifficulty());
+		assertEquals(SocialQuestDifficulty.YOUMUSTBEPRO, fav.getDifficulty());
 	}
 }

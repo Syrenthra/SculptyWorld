@@ -5,19 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Hashtable;
-import java.util.Vector;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import sw.item.Item;
-import sw.item.ItemContainer;
-import sw.item.Weapon;
 import sw.lifeform.Creature;
 import sw.lifeform.NPC;
-import sw.lifeform.PC;
+import sw.lifeform.Player;
+
 import sw.environment.Exit;
 import sw.environment.Room;
 import sw.environment.Zone;
@@ -51,13 +47,6 @@ public class TestRoom
         assertEquals(1,testRoom.getID());
         assertEquals(0,testRoom.getNumNPCs());
         assertEquals(0,testRoom.getNumCreatures());
-        
-        testRoom = new Room("Test Room2","This is a room too.");
-        assertEquals("This is a room too.",testRoom.getDescription());
-        assertEquals("Test Room2",testRoom.getTitle());
-        assertEquals(-1,testRoom.getID());
-        testRoom.setID(2);
-        assertEquals(2,testRoom.getID());
     }
     
     @Test
@@ -76,29 +65,20 @@ public class TestRoom
         Room testRoom1 = new Room(1,"Test1","Desc1");
         MockItem item = new MockItem("Item", "Desc",5,6);
         
-        //Test won't crash on item not there
-        assertNull(testRoom1.getItem(0));
-        
         testRoom1.addItem(item);
         assertEquals(item,testRoom1.getItem(0));
-        
-        //Can Get an Item by Name.
-        assertEquals(item,testRoom1.getItem("Item"));
     }
     
     @Test
     public void testKeepAndRemovePlayers()
     {
         Room testRoom1 = new Room(IdGen.getID(),"Test1","Desc1");
-        PC dude = new PC(IdGen.getID(),"Dude", "Desc",10);
-        testRoom1.addPC(dude);
-        assertEquals(dude,testRoom1.getPC(dude.getID()));
+        Player dude = new Player(IdGen.getID(),"Dude", "Desc",10);
+        testRoom1.addPlayer(dude);
+        assertEquals(dude,testRoom1.getPlayer(dude.getID()));
         
         assertTrue(testRoom1.hasPlayer(dude.getID()));
         assertEquals(testRoom1,dude.getCurrentRoom());
-        assertTrue(testRoom1.hasPlayer(dude.getName()));
-        assertEquals(dude,testRoom1.getPlayer(dude.getName()));
-        assertNull(testRoom1.getPlayer("GuyNotInRoom"));
         
         testRoom1.removePlayer(dude.getID());
         
@@ -141,24 +121,6 @@ public class TestRoom
         assertNull(dude.getCurrentRoom());
         
         assertNull(testRoom1.removeCreature(dude.getID()));
-    }
-    
-    @Test
-    public void testGetLifeformByName()
-    {
-        Room testRoom1 = new Room(1,"Room","Desc1");
-        NPC npcDude = new NPC(1,"NPC Dude", "Desc",50,10,4,13);
-        testRoom1.addNPC(npcDude);
-        testRoom1.setZone(Zone.CITY);
-        Creature creatureDude = new Creature(1,"Creature Dude", "Desc",50,10,4,13);
-        creatureDude.addZone(Zone.CITY);
-        testRoom1.addCreature(creatureDude);
-        PC pcDude = new PC(IdGen.getID(),"PC Dude", "Desc",10);
-        testRoom1.addPC(pcDude);
-        
-        assertEquals(npcDude,testRoom1.getLifeform("NPC Dude"));
-        assertEquals(creatureDude,testRoom1.getLifeform("Creature Dude"));
-        assertEquals(pcDude,testRoom1.getLifeform("PC Dude"));
     }
     
     @Test
@@ -251,7 +213,7 @@ public class TestRoom
         room.addRoomObserver(observer2);
         assertNull(observer1.myRoom);
         assertNull(observer2.myRoom);
-        room.informObservers(null,RoomUpdateType.CREATURE_ADDED);
+        room.informObservers(null,SWRoomUpdateType.CREATURE_ADDED);
         assertEquals(room,observer1.myRoom);
         assertEquals(room,observer2.myRoom);
     }
@@ -526,145 +488,7 @@ public class TestRoom
         
         assertEquals(rooms[2],fred.getCurrentRoom());  
     }
-    
-    @Test
-    public void testGetRoomInfoBasics()
-    {
-        Room room = new Room(1, "Tree","Forest");
-        room.setZone(Zone.BEACH);
-        room.addExit(room, Exit.EAST);
 
-        Hashtable<String,Object> data = room.getRoomInfo();
-        assertEquals(1,data.get(Room.ID));
-        assertEquals("Tree",data.get(Room.TITLE));
-        assertEquals("Forest",data.get(Room.DESCRIPTION));
-        assertEquals("BEACH",data.get(Room.ZONE));
-        Hashtable<String,Integer> exits = (Hashtable<String,Integer>)data.get(Room.EXITS);
-        assertEquals(1,exits.size());
-        Integer value = exits.get("EAST");
-        assertEquals(1,value.intValue());
-    }
-    
-    @Test
-    public void testGetRoomInfoWithPCandItems()
-    {
-        ItemContainer pack1 = new ItemContainer("Belt","Desc",20,5,10);
-        pack1.setItemID(3);
-        Weapon weapon = new Weapon("Sword","A Sword",10,5,20,1);
-        weapon.setItemID(2);
-        pack1.store(weapon);
-        PC dude = new PC(4,"Dude","Desc",50);
-        Room room = new Room(1, "Tree","Forest");
-        room.setZone(Zone.BEACH);
-        Hashtable<String,Object> data = room.getRoomInfo();
-        
-        Vector<Integer> items = (Vector<Integer>)data.get(Room.ITEMS);
-        assertEquals(1,items.size());
-        Integer value = items.elementAt(0);
-        assertEquals(3,value.intValue());
-        
-        Vector<Integer> pcs = (Vector<Integer>)data.get(Room.PCs);
-        assertEquals(1,pcs.size());
-        value = pcs.elementAt(0);
-        assertEquals(4,value.intValue());
-        
-    }
-    
-    @Test
-    public void testGetRoomInfoWithCreatures()
-    {
-        Creature dude = new Creature(2, "Dude", "Desc", 50, 10, 5, 15);
-        dude.addZone(Zone.BEACH);
-        dude.addZone(Zone.DESERT);
-        Room room = new Room(1, "Tree","Forest");
-        room.setZone(Zone.BEACH);
-        room.addCreature(dude);
-
-        Hashtable<String,Object> data = room.getRoomInfo();
-        
-        Vector<Integer> creatures = (Vector<Integer>)data.get(Room.CREATURES);
-        assertEquals(1,creatures.size());
-        int value = creatures.elementAt(0);
-        assertEquals(2,value);
-        
-        
-    }
-    
-    @Test
-    public void testConstructRoom()
-    {
-        Hashtable<String,Object> data = new Hashtable<String,Object>();
-        data.put(Room.ID, 1);
-        data.put(Room.ZONE, "BEACH");
-        data.put(Room.TITLE, "Title");
-        data.put(Room.DESCRIPTION, "Description");
-        Room room = Room.constructRoom(data);
-        
-        assertEquals(1,room.getID());
-        assertEquals("Title",room.getTitle());
-        assertEquals("Description",room.getDescription());
-        assertEquals(Zone.BEACH,room.getZone());
-        
-    }
-    
-    @Test
-    public void testGetZoneCluster()
-    {
-        TheWorld world = TheWorld.getInstance();
-        Room room1 = new Room(1, "Mountain 1","This is a small mountain.");
-        room1.setZone(Zone.MOUNTAIN);
-        Room room2 = new Room(2, "Mountain 2","This is a tall mountain.");
-        room2.setZone(Zone.MOUNTAIN);
-        Room room3 = new Room(3, "Forest 1","This is a small forest.");
-        room3.setZone(Zone.FOREST);
-        Room room4 = new Room(4, "Forest 2","This is a big forest.");
-        room4.setZone(Zone.FOREST);
-        Room room5 = new Room(5, "Forest 3","This is a medium forest.");
-        room5.setZone(Zone.FOREST);
-        Room room6 = new Room(6, "Desert 1","This is a hot desert.");
-        room6.setZone(Zone.DESERT);
-        Room room7 = new Room(7, "Desert 2","This is a cold desert.");
-        room7.setZone(Zone.DESERT);
-        
-        // Dump all this stuff into the world
-        world.addRoom(room1);
-        world.addRoom(room2);
-        world.addRoom(room3);
-        world.addRoom(room4);
-        world.addRoom(room5);
-        world.addRoom(room6);
-        world.addRoom(room7);
-        
-     // Attach the rooms together.
-        room1.addExit(room2, Exit.EAST);
-        
-        room2.addExit(room1, Exit.WEST);
-        room2.addExit(room3, Exit.EAST);
-        
-        room3.addExit(room2, Exit.WEST);
-        room3.addExit(room4,Exit.EAST);
-        
-        room4.addExit(room3, Exit.WEST);
-        room4.addExit(room5,Exit.EAST);
-        
-        room5.addExit(room4, Exit.WEST);
-        room5.addExit(room6,Exit.EAST);
-        
-        room6.addExit(room5, Exit.WEST);
-        room6.addExit(room7,Exit.EAST);
-        
-        room7.addExit(room6, Exit.WEST);
-        
-        world.constructZoneGraph();
-        
-        Hashtable<Integer, Room> forestGroup = world.getZone(room4).getRooms();
-        assertEquals(3,forestGroup.size());
-        assertTrue(forestGroup.containsKey(new Integer(3)));
-        assertTrue(forestGroup.containsKey(new Integer(4)));
-        assertTrue(forestGroup.containsKey(new Integer(5)));
-        
-    }
-    
 }
 
 /**
@@ -688,7 +512,7 @@ class MockRoomRemovesObserver implements RoomObserver
      * Simply puts the new time into an instance variable
      */
     @Override
-    public void roomUpdate(Room room, Object source, RoomUpdateType type)
+    public void roomUpdate(Room room, Object source, SWRoomUpdateType type)
     {
         myRoom = room;
         m_timer.removeRoomObserver(this);

@@ -1,6 +1,7 @@
 package sw.socialNetwork;
 
-import sw.lifeform.NPC;
+import sw.lifeform.SocialNPC;
+import sw.socialNetwork.simulation.EventTypes;
 
 /**
  * 
@@ -11,8 +12,8 @@ import sw.lifeform.NPC;
 public class FriendRequest
 {
 	private FriendRequestStatus state;
-	private NPC requester;
-	private NPC requestee;
+	private SocialNPC requester;
+	private SocialNPC requestee;
 
 	/**
 	 * Creates a new FriendshipRequest.
@@ -20,7 +21,7 @@ public class FriendRequest
 	 * @param requester The SocialNPC initiating the new relationship
 	 * @param requestee The SocialNPC who will respond to the request
 	 */
-	public FriendRequest(NPC requester, NPC requestee)
+	public FriendRequest(SocialNPC requester, SocialNPC requestee)
 	{
 		this.requester = requester;
 		this.requestee = requestee;
@@ -35,6 +36,7 @@ public class FriendRequest
 		if (state == FriendRequestStatus.WAITING)
 		{
 			this.state = FriendRequestStatus.ACCEPTED;
+			requestee.newEvent(requester, EventTypes.FRIEND_REQUEST_ACCEPTED);
 		}
 	}
 
@@ -46,6 +48,7 @@ public class FriendRequest
 		if (state == FriendRequestStatus.WAITING)
 		{
 			this.state = FriendRequestStatus.REJECTED;
+			requestee.newEvent(requester, EventTypes.FRIEND_REQUEST_REJECTED);
 		}
 	}
 
@@ -54,12 +57,12 @@ public class FriendRequest
 		return state;
 	}
 
-	public NPC getRequester()
+	public SocialNPC getRequester()
 	{
 		return requester;
 	}
 
-	public NPC getRequestee()
+	public SocialNPC getRequestee()
 	{
 		return requestee;
 	}

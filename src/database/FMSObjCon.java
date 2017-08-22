@@ -11,21 +11,21 @@ package database;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Hashtable;
 
 public class FMSObjCon
-{
+    {
 
     public FMSObjCon()
-    {
-    }
+        {
+        }
 
-    public static void addObjectToStatement(int index, Object obj, PreparedStatement ps) throws IOException, SQLException
-    {
+    public static ByteArrayInputStream addObjectToStatement(int index, Object obj, PreparedStatement ps) throws IOException, SQLException
+        {
+        ByteArrayInputStream bytesIn = null;
+
         // Because MS SQL doesn't support Java Objects we have to write the
         // object to a
         // binary stream, then read it from the binary stream.
@@ -40,25 +40,9 @@ public class FMSObjCon
 
         byte[] buf = bytesOut.toByteArray();
 
-        ps.setBytes(index, buf);
-    }
+        bytesIn = new ByteArrayInputStream(buf);
+        ps.setBinaryStream(index, bytesIn, buf.length);
 
-    public static Object convertBytesToObject(byte[] buf)
-    {
-        Object data = null;
-        try
-        {
-            ByteArrayInputStream bytesIn = new ByteArrayInputStream(buf);
-            ObjectInputStream objectIn = new ObjectInputStream(bytesIn);
-            data = objectIn.readObject();
-            objectIn.close();
-            bytesIn.close();
+        return bytesIn;
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        return data;
     }
-}

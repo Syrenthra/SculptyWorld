@@ -2,20 +2,10 @@ package sw.lifeform;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Hashtable;
-import java.util.Vector;
-
-import mock.MockLifeform;
-import mock.MockRoom;
 
 import org.junit.Test;
 
-import sw.environment.CreatureResource;
 import sw.environment.Room;
-import sw.environment.Zone;
-import sw.item.Item;
 import sw.lifeform.Lifeform;
 
 
@@ -31,7 +21,7 @@ public class TestLifeForm
         assertEquals("The Dude",dude.getDescription());
         assertEquals(10,dude.getMaxLifePoints());
         assertEquals(10,dude.getCurrentLifePoints());
-        assertEquals(-1,dude.getID());
+        assertEquals(5,dude.getID());
         assertNull(dude.getCurrentRoom());
     }
     
@@ -43,27 +33,52 @@ public class TestLifeForm
         dude.setCurrentRoom(testRoom);
         assertEquals(testRoom,dude.getCurrentRoom());
     }
-    
-    @Test
-    public void testSetID()
+}
+class MockLifeform extends Lifeform
+{
+    public MockLifeform(String name, String desc, int life)
     {
-        Lifeform dude = new MockLifeform("Dude","The Dude",10);
-        dude.setID(15);
-        assertEquals(15,dude.getID());
+        super(5,name,desc,life);
     }
-    
-    @Test
-    public void testSetCurrentLifePoints()
+
+    @Override
+    public void attack(Lifeform entity)
     {
-        Lifeform dude = new MockLifeform("Dude","The Dude",10);
-        dude.setCurrentLifePoints(5);
-        assertEquals(5,dude.getCurrentLifePoints());
-        dude.setCurrentLifePoints(11);
-        assertEquals(10,dude.getCurrentLifePoints());
+        // TODO Auto-generated method stub
+        
     }
-    
-    
+
+    @Override
+    public void takeHit(int damage)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+	@Override
+	public void updateTime(String name, int time) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void takeHeal(int magnitude) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
+class MockRoom extends Room
+{
+    public MockRoom(int id, String name, String desc)
+    {
+        super(id, name,desc);
+    }
 
-
+    @Override
+    public void updateTime(String name, int time)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+}

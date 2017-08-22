@@ -7,7 +7,7 @@ import org.junit.Test;
 import sw.combat.Effect;
 import sw.combat.EffectType;
 import sw.environment.TheWorld;
-import sw.lifeform.PC;
+import sw.lifeform.Player;
 import sw.time.GameTimer;
 
 
@@ -16,7 +16,7 @@ public class TestEffect
 	@Test
 	public void testAddEffect()
 	{
-        PC dude = new PC(1,"Dude","Desc",50);
+        Player dude = new Player(1,"Dude","Desc",50);
         Effect e = new Effect("Null", EffectType.BUFF, null, 1, 10, 1, dude);
         dude.addEffect(e);
         assertEquals(1, dude.getNumEffects());
@@ -27,7 +27,7 @@ public class TestEffect
 	public void testEffectTickDamage()
 	{
 		GameTimer combat = new GameTimer(TheWorld.COMBAT_TIMER, 1000);
-		PC dude = new PC(1,"Dude","Desc",50);
+		Player dude = new Player(1,"Dude","Desc",50);
 		combat.addTimeObserver(dude);
         Effect e = new Effect("Null", EffectType.DOT, null, 1, 10, 1, dude);
         dude.addEffect(e);
@@ -40,7 +40,7 @@ public class TestEffect
 	public void testEffectTickHeal()
 	{
 		GameTimer combat = new GameTimer(TheWorld.COMBAT_TIMER, 1000);
-		PC dude = new PC(1,"Dude","Desc",50);
+		Player dude = new Player(1,"Dude","Desc",50);
 		combat.addTimeObserver(dude);
         Effect e = new Effect("Null", EffectType.HOT, null, 1, 10, 1, dude);
         dude.addEffect(e);
@@ -53,7 +53,7 @@ public class TestEffect
 	public void testEffectsTickDamageAndHeal()
 	{
 		GameTimer combat = new GameTimer(TheWorld.COMBAT_TIMER, 1000);
-		PC dude = new PC(1,"Dude","Desc",50);
+		Player dude = new Player(1,"Dude","Desc",50);
 		combat.addTimeObserver(dude);
         Effect eDamage = new Effect("Damage", EffectType.DOT, null, 10, 10, 1, dude);
         dude.addEffect(eDamage);
@@ -68,7 +68,7 @@ public class TestEffect
 	public void testEffectTickSeconds()
 	{
 		GameTimer combat = new GameTimer(TheWorld.COMBAT_TIMER, 1000);
-		PC dude = new PC(1,"Dude","Desc",50);
+		Player dude = new Player(1,"Dude","Desc",50);
 		combat.addTimeObserver(dude);
         Effect e = new Effect("Null", EffectType.DOT, null, 10, 9, 3, dude);
         dude.addEffect(e);
@@ -85,7 +85,7 @@ public class TestEffect
 	public void testEffectRemoval()
 	{
 		GameTimer combat = new GameTimer(TheWorld.COMBAT_TIMER, 1000);
-		PC dude = new PC(1,"Dude","Desc",50);
+		Player dude = new Player(1,"Dude","Desc",50);
 		combat.addTimeObserver(dude);
         Effect e = new Effect("Null", EffectType.DOT, null, 1, 5, 1, dude);
         dude.addEffect(e);
@@ -101,6 +101,5 @@ public class TestEffect
         combat.timeChanged();
         assertEquals(45, dude.getCurrentLifePoints());
         assertEquals(0, dude.getNumEffects());
-        assertEquals(45, dude.getCurrentLifePoints());
 	}
 }

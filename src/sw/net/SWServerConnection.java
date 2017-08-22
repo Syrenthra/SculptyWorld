@@ -27,9 +27,6 @@ public class SWServerConnection extends SecureServerConnection
     
     private Vector<SWMessage> m_outgoingQueue = new Vector<SWMessage>();
 
-    /**
-     * TODO I think this is useless now.
-     */
     protected long m_securityKey = (Long.valueOf("3938457194759273")).longValue();
 
     protected boolean m_run = true;
@@ -49,28 +46,17 @@ public class SWServerConnection extends SecureServerConnection
         this.start();
     }
 
-    /**
-     * Closes the connection down to the client.
-     */
     public void closeClient() throws IOException
     {
         m_run = false;
         m_client.closeSocket();
     }
 
-    /**
-     * 
-     * @return The connection to the client that connected to the server for the game.
-     */
     public SecureObjectSocketInterface<SWMessage> getClient()
     {
         return m_client;
     }
 
-    /**
-     * 
-     * @return The present state of the connection (e.g. logining in, playing the game, etc...)
-     */
     public ServerConnectionState getServerConnectionState()
     {
         return m_serverState;
@@ -162,13 +148,10 @@ public class SWServerConnection extends SecureServerConnection
         return this.getName() + m_client.toString();
     }
 
-    /**
-     * Changes the state of the user's connection to the server.
-     * @param state
-     */
     public void setServerConnectionState(ServerConnectionState state)
     {
         m_serverState = state;
+
     }
 
     /**
@@ -178,28 +161,6 @@ public class SWServerConnection extends SecureServerConnection
     public void sendMessage(SWMessage msg)
     {
         m_outgoingQueue.add(msg);    
-    }
-    
-    /**
-     * Returns the next message to be sent by the server.
-     * @return
-     */
-    public SWMessage getNextMessage()
-    {
-        if (m_outgoingQueue.size() > 0)
-            return m_outgoingQueue.elementAt(0);
-        return null;
-    }
-    
-    /**
-     * Removes and returns the next message to be sent by the SWServerConnection.
-     * @return
-     */
-    public SWMessage removeNextMessage()
-    {
-        if (m_outgoingQueue.size() > 0)
-            return m_outgoingQueue.remove(0);
-        return null;
     }
 
 }

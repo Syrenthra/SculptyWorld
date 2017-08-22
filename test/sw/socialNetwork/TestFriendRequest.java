@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import sw.lifeform.NPC;
-
 public class TestFriendRequest
 {
 	
@@ -15,13 +13,15 @@ public class TestFriendRequest
 	@Test
 	public void testInit()
 	{
-	    NPC requester = new NPC(0, "Mocky", "The MockSocialNPC", 100, 1, 50, 2);
-        NPC requestee = new NPC(1, "Mocky", "The MockSocialNPC", 100, 1, 50, 2);
+		MockSocialNPC requester = new MockSocialNPC();
+		MockSocialNPC requestee = new MockSocialNPC();
 		FriendRequest fr = new FriendRequest(requester, requestee);
 		
 		assertEquals(FriendRequestStatus.WAITING, fr.getState());
 		assertEquals(requester, fr.getRequester());
 		assertEquals(requestee, fr.getRequestee());
+		
+		requester.getQuestGenerator().clear();
 	}
 	
 	/**
@@ -30,8 +30,8 @@ public class TestFriendRequest
 	@Test
 	public void testAccepted()
 	{
-	    NPC requester = new NPC(0, "Mocky", "The MockSocialNPC", 100, 1, 50, 2);
-        NPC requestee = new NPC(1, "Mocky", "The MockSocialNPC", 100, 1, 50, 2);
+		MockSocialNPC requester = new MockSocialNPC();
+		MockSocialNPC requestee = new MockSocialNPC();
 		FriendRequest fr = new FriendRequest(requester, requestee);
 		
 		fr.accept();
@@ -40,6 +40,8 @@ public class TestFriendRequest
 		//once accepted, the status should not be able to change
 		fr.reject();
 		assertEquals(FriendRequestStatus.ACCEPTED, fr.getState());
+		
+		requester.getQuestGenerator().clear();
 	}
 	
 	
@@ -49,8 +51,8 @@ public class TestFriendRequest
 	@Test
 	public void testReject()
 	{
-	    NPC requester = new NPC(0, "Mocky", "The MockSocialNPC", 100, 1, 50, 2);
-        NPC requestee = new NPC(1, "Mocky", "The MockSocialNPC", 100, 1, 50, 2);
+		MockSocialNPC requester = new MockSocialNPC();
+		MockSocialNPC requestee = new MockSocialNPC();
 		FriendRequest fr = new FriendRequest(requester, requestee);
 		
 		fr.reject();
@@ -59,5 +61,7 @@ public class TestFriendRequest
 		//once accepted, the status should not be able to change
 		fr.accept();
 		assertEquals(FriendRequestStatus.REJECTED, fr.getState());
+		
+		requester.getQuestGenerator().clear();
 	}
 }

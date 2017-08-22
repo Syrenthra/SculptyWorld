@@ -1,6 +1,6 @@
 package sw.quest;
 
-import sw.lifeform.PC;
+import sw.lifeform.Player;
 
 public interface Goal
 { 

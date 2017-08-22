@@ -7,12 +7,6 @@ package sw.environment;
  */
 public interface RoomObserver
 {
-    /**
-     * TODO: Should we create a RoomEvent that stores all three pieces of information into one class?
-     * @param room
-     * @param source
-     * @param type
-     */
-    public void roomUpdate(Room room, Object source, RoomUpdateType type);
+    public void roomUpdate(Room room, Object source, SWRoomUpdateType type);
 
 }

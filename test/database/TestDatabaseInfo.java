@@ -10,15 +10,20 @@ import java.sql.SQLException;
 import org.junit.Before;
 import org.junit.Test;
 
-import sw.database.SWQuery;
-
 public class TestDatabaseInfo
 {
 
     @Before
     public void before()
     {
-        DatabaseManager.getInstance().activateJDBC();
+        try
+        {
+            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+        }
+        catch (SQLException sqle)
+        {
+            System.out.println(sqle);
+        }
     }
 
     @Test
@@ -43,14 +48,13 @@ public class TestDatabaseInfo
     @Test
     public void testForSWDatabase()
     {
-        DatabaseInfo di = new DatabaseInfo(SWQuery.DB_LOCATION, SWQuery.LOGIN_NAME, SWQuery.PASSWORD);
+        DatabaseInfo di = new DatabaseInfo("jdbc:mysql://localhost/SculptyWorldDB", "sculpty", "world12Big");
         try
         {
             di.makeConnection();
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             assertFalse(true);
         }
 

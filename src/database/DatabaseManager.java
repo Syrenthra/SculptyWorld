@@ -43,16 +43,6 @@ public class DatabaseManager
         return dbOverlord;
     }
 
-    public synchronized void addToLog(String str)
-    {
-        m_log.addMessageToLog(str);
-    }
-
-    public void addToLog(Exception e)
-    {
-        m_log.addMessageToLog(e);
-    }
-
     /**
      * This is the recommended way to activate the JDBC drivers, but is
      * only setup to work with one specific driver.  Setup to work with
@@ -60,7 +50,7 @@ public class DatabaseManager
      * 
      * @return Returns true if it successfully sets up the driver.
      */
-    public boolean activateJDBC()
+    protected boolean activateJDBC()
     {
         try
         {
@@ -98,15 +88,14 @@ public class DatabaseManager
     }
 
     /**
-     * Gets the information for a given database from m_dbConnections so
-     * that you can access a connection to a database.
+     * Gets the address information for a given database from m_dbConnections.
      * 
      * @param name
      *            The name of the database you want connection information for.
-     * @return The DatabaseInfo instance containing the needed information, or null if no
+     * @return The Hashtable containing the needed information, or null if no
      *         information for that database is found.
      */
-    public DatabaseInfo getDatabaseInfo(String name)
+    public DatabaseInfo getDBAddress(String name)
     {
         DatabaseInfo db = null;
 
@@ -143,7 +132,6 @@ public class DatabaseManager
             dbInfo.closeConnection();
         }
 
-        m_log.shutdown();
     }
 
 }

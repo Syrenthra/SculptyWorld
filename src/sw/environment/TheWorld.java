@@ -1,12 +1,11 @@
 package sw.environment;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import sw.lifeform.Creature;
 import sw.lifeform.NPC;
-import sw.lifeform.PC;
+import sw.lifeform.Player;
+import sw.quest.Goal;
 import sw.time.GameTimer;
 
 public class TheWorld implements RoomObserver
@@ -21,19 +20,13 @@ public class TheWorld implements RoomObserver
 
     private static TheWorld m_theWorld = null;
 
-    private Hashtable<Integer, PC> m_players = new Hashtable<Integer, PC>();
+    private Hashtable<Integer, Player> m_players = new Hashtable<Integer, Player>();
 
     private Hashtable<Integer, Creature> m_creatures = new Hashtable<Integer, Creature>();
 
     private Hashtable<Integer, NPC> m_npcs = new Hashtable<Integer, NPC>();
 
     private Hashtable<Integer, Room> m_rooms = new Hashtable<Integer, Room>();
-    
-    /**
-     * The computed list of all the zones in the world and how they are interconnected. Created
-     * using constructZoneGraph().
-     */
-    private ArrayList<WorldZone> m_zones = new ArrayList<WorldZone>();
 
     /**
      * TODO: Should probably protect the timers later.
@@ -60,7 +53,10 @@ public class TheWorld implements RoomObserver
     {
         if (startTimers)
         {
-            startTimers();
+            m_combatTimer.run();
+            m_spawnTimer.run();
+            m_moveTimer.run();
+            m_roomTimer.run();
         }
     }
     
@@ -69,10 +65,10 @@ public class TheWorld implements RoomObserver
      */
     public void startTimers()
     {
-        m_combatTimer.start();
-        m_spawnTimer.start();
-        m_moveTimer.start();
-        m_roomTimer.start();
+        m_combatTimer.run();
+        m_spawnTimer.run();
+        m_moveTimer.run();
+        m_roomTimer.run();
     }
     
     /**
@@ -115,7 +111,7 @@ public class TheWorld implements RoomObserver
      * Adds a player to the world
      * @param player
      */
-    public void addPlayer(PC player)
+    public void addPlayer(Player player)
     {
         m_players.put(player.getID(), player);
 
@@ -126,7 +122,7 @@ public class TheWorld implements RoomObserver
      * @param id
      * @return
      */
-    public PC getPlayer(int id)
+    public Player getPlayer(int id)
     {
         return m_players.get(id);
     }
@@ -156,9 +152,8 @@ public class TheWorld implements RoomObserver
      * Moves a player from one room to another in the world.
      * @param player
      * @param exit
-     * @return Returns true if moved player, false if did not.
      */
-    public boolean movePlayer(PC player, Exit exit)
+    public void movePlayer(Player player, Exit exit)
     {
         Room presentRoom = player.getCurrentRoom();
         if (presentRoom != null)
@@ -167,11 +162,15 @@ public class TheWorld implements RoomObserver
             if (newRoom != null)
             {
                 presentRoom.removePlayer(player.getID());
-                newRoom.addPC(player);
-                return true;
+                newRoom.addPlayer(player);
+                if (newRoom instanceof Goal) // Update for any quests the player might be doing.
+                {
+                    Goal goal = (Goal) newRoom;
+                    player.goalReached(goal);
+                }
             }
         }
-        return false;
+
     }
 
     /**
@@ -201,7 +200,7 @@ public class TheWorld implements RoomObserver
      * he or she is in.
      * @param player
      */
-    public void removePlayer(PC player)
+    public void removePlayer(Player player)
     {
         int id = player.getID();
         Room room = player.getCurrentRoom();
@@ -305,9 +304,9 @@ public class TheWorld implements RoomObserver
      * attached.
      */
     @Override
-    public void roomUpdate(Room room, Object source, RoomUpdateType type)
+    public void roomUpdate(Room room, Object source, SWRoomUpdateType type)
     {
-        if (type == RoomUpdateType.CREATURE_ADDED)
+        if (type == SWRoomUpdateType.CREATURE_ADDED)
         {
             Creature creature = (Creature) source;
             if (!m_creatures.containsKey(creature.getID()))
@@ -316,7 +315,7 @@ public class TheWorld implements RoomObserver
 
             }
         }
-        else if (type == RoomUpdateType.CREATURE_RESOURCE_ADDED)
+        else if (type == SWRoomUpdateType.CREATURE_RESOURCE_ADDED)
         {
             CreatureResource cr = (CreatureResource) source;
 
@@ -326,7 +325,7 @@ public class TheWorld implements RoomObserver
             }
 
         }
-        else if (type == RoomUpdateType.CREATURE_RESOURCE_REMOVED)
+        else if (type == SWRoomUpdateType.CREATURE_RESOURCE_REMOVED)
         {
             CreatureResource cr = (CreatureResource) source;
             {
@@ -389,83 +388,5 @@ public class TheWorld implements RoomObserver
         }
 
     }
-
-    /**
-     * This will construct a graph of the zones that can be used to quickly
-     * get the interconnected Zone a room belongs to or neighboring zone.  
-     */
-    public void constructZoneGraph()
-    {
-        m_zones = new ArrayList<WorldZone>();
-        
-        Enumeration<Room> roomEnum = m_rooms.elements();
-        while(roomEnum.hasMoreElements())
-        {
-            WorldZone roomZone = new WorldZone();
-            Room room = roomEnum.nextElement();
-            roomZone.addRoom(room);
-            m_zones.add(roomZone);
-            
-            // See if we need to connect the zone to another zone.
-            for (Room exitRoom : room.getExitDestinations())
-            {
-                for (int index = 0; index < m_zones.size(); index++)
-                {
-                    WorldZone zone = m_zones.get(index);
-
-                    if ((zone.containsRoom(exitRoom.getID())) && (zone != roomZone))
-                    {
-                        // If Zone type is the same then merge the WorldZones.
-                        if (exitRoom.getZone() == room.getZone())
-                        {
-                            m_zones.remove(index);
-                            roomZone.mergeZone(zone);
-                            index--;
-                        }
-                        else
-                        {
-                            zone.connectsTo(roomZone);
-                            roomZone.connectsTo(zone);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public WorldZone getZone(Room room)
-    {
-        WorldZone result = null;
-        
-        for (WorldZone zone : m_zones)
-        {
-            if (zone.containsRoom(room.getID()))
-            {
-                result = zone;
-                break;
-            }
-        }
-        return result;
-    }
-
-    public ArrayList<WorldZone> getNeighboringZones(Room room)
-    {
-        WorldZone result = null;
-        
-        for (WorldZone zone : m_zones)
-        {
-            if (zone.containsRoom(room.getID()))
-            {
-                result = zone;
-                break;
-            }
-        }
-        if (result != null)
-            return result.getNeighboringZones();
-        else
-            return null;
-    }
-
-
 
 }

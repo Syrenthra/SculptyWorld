@@ -2,11 +2,10 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import sw.database.SWQuery;
 
 /**
  * Used by the JUnit tests to check for values in the database.
@@ -47,8 +46,9 @@ public class CheckDatabaseValue
     {
         if (m_dbConn == null)
         {
-            m_dbConn = DriverManager.getConnection(SWQuery.DB_LOCATION, SWQuery.LOGIN_NAME, SWQuery.PASSWORD);
+            m_dbConn = DriverManager.getConnection("jdbc:mysql://localhost/SculptyWorldDB", "sculpty", "world12Big");
         }
+
     }
 
     /**
@@ -74,6 +74,7 @@ public class CheckDatabaseValue
         }
 
         return null;
+
     }
 
 }

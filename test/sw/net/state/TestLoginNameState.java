@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 
-import mock.MockSWServerConnection;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +28,7 @@ public class TestLoginNameState
     @Test
     public void testJustEnteredState()
     {
-        assertEquals("Login: ", sc.getServerConnectionState().getMessage().getMessage());
+        assertEquals("Login:", sc.getServerConnectionState().getMessage().getMessage());
     }
     
     @Test
@@ -39,8 +37,6 @@ public class TestLoginNameState
         SWMessage msg = new SWMessage("NameInDatabase");
         sc.getServerConnectionState().executeAction(msg);
         assertTrue(sc.getServerConnectionState() instanceof LoginPasswordState);
-        LoginPasswordState state = (LoginPasswordState)sc.getServerConnectionState();
-        assertEquals("NameInDatabase",state.getLoginName());
     }
     
     @Test
@@ -49,8 +45,6 @@ public class TestLoginNameState
         SWMessage msg = new SWMessage("NameNotInDatabase");
         sc.getServerConnectionState().executeAction(msg);
         assertTrue(sc.getServerConnectionState() instanceof LoginPasswordState);
-        LoginPasswordState state = (LoginPasswordState)sc.getServerConnectionState();
-        assertEquals("NameNotInDatabase",state.getLoginName());
     }
 
 }

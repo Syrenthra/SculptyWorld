@@ -2,7 +2,6 @@ package sw.net.msg;
 
 import java.io.Serializable;
 
-import sw.database.SecurityInterface;
 import sw.database.obj.SWToken;
 import sw.net.SWServerConnection;
 
@@ -14,7 +13,7 @@ import sw.net.SWServerConnection;
  * @since JDK1.1
  */
 
-public class SWMessage implements Serializable, SecurityInterface
+public class SWMessage implements Serializable
 {
     /**
      * Comment for <code>serialVersionUID</code>
@@ -37,17 +36,9 @@ public class SWMessage implements Serializable, SecurityInterface
      * Sets who this message is attached to.
      * @param token
      */
-    public void setSecurityToken(SWToken token)
+    public void setToken(SWToken token)
     {
         m_token = token;
-    }
-    
-    /**
-     * Returns the token attached to this message.
-     */
-    public SWToken getSecurityToken()
-    {
-        return m_token;
     }
 
     /**

@@ -3,13 +3,14 @@ package sw.socialNetwork;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import sw.lifeform.TestNPC;
-import sw.quest.TestQuestGenerator;
-import sw.quest.TestTimedQuest;
-import sw.quest.reward.TestFavorReward;
-import sw.quest.reward.TestGiftReward;
-import sw.quest.reward.TestHomewreckerReward;
-import sw.quest.reward.TestRequestFavorReward;
+import sw.item.TestFavorTarget;
+import sw.lifeform.TestSocialNPC;
+import sw.quest.TestFavorQuest;
+import sw.quest.TestGiftQuest;
+import sw.quest.TestHomewreckerQuest;
+import sw.quest.TestRequestFavorQuest;
+import sw.quest.TestSocialQuest;
+import sw.socialNetwork.simulation.TestEventGeneration;
 
 /**
  * @author David Abrams
@@ -19,15 +20,17 @@ import sw.quest.reward.TestRequestFavorReward;
 @RunWith(Suite.class)
 @Suite.SuiteClasses(
         {
-        	TestNPC.class,
-        	TestFavorReward.class,
-        	TestGiftReward.class,
-        	TestHomewreckerReward.class,
-        	TestRequestFavorReward.class,
-        	TestTimedQuest.class,
+        	TestSocialNPC.class,
+        	TestFavorQuest.class,
+        	TestFavorTarget.class,
+        	TestGiftQuest.class,
+        	TestHomewreckerQuest.class,
+        	TestRequestFavorQuest.class,
+        	TestSocialQuest.class,
         	TestFeelings.class,
         	TestFriendRequest.class,
         	TestQuestGenerator.class,
+        	TestEventGeneration.class,
         	TestPersonality.class,
         	TestFavor.class
         })

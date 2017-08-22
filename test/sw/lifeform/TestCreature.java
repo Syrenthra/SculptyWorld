@@ -5,9 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Hashtable;
-import java.util.Vector;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +14,6 @@ import sw.environment.Exit;
 import sw.environment.Room;
 import sw.environment.TheWorld;
 import sw.environment.Zone;
-import sw.item.Item;
-import sw.item.Weapon;
 import sw.lifeform.Creature;
 
 public class TestCreature
@@ -41,7 +36,6 @@ public class TestCreature
         Creature dude = new Creature(1, "Dude", "Desc", 50, 10, 5, 15);
         assertEquals("Dude", dude.getName());
         assertEquals("Desc", dude.getDescription());
-        assertEquals(50,dude.getCurrentLifePoints());
         assertEquals(10, dude.getDamage());
         assertEquals(5, dude.getArmor());
         assertEquals(15, dude.getSpeed());
@@ -83,8 +77,8 @@ public class TestCreature
         Creature dude1 = new Creature(1, "Dude1", "Desc", 100, 10, 5, 15);
         Creature dude2 = new Creature(2, "Dude2", "Desc", 100, 10, 5, 15);
         Creature dude3 = dude1.clone();
-        assertTrue(dude1.equals(dude3));
-        assertFalse(dude1.equals(dude2));
+        assertTrue(dude1.isSame(dude3));
+        assertFalse(dude1.isSame(dude2));
     }
 
     @Test
@@ -219,61 +213,6 @@ public class TestCreature
         assertEquals(1,dude.getNumValidZones());
         assertTrue(dude.canTravel(Zone.DESERT));
         assertFalse(dude.canTravel(Zone.BEACH));
-    }
-    
-    @Test
-    public void testGetCreatureInfo()
-    {
-        Creature dude = new Creature(1, "Dude", "Desc", 50, 10, 5, 15);
-        dude.addZone(Zone.BEACH);
-        dude.addZone(Zone.DESERT);
-        CreatureResource resource = new CreatureResource(dude, 10, 100000, 100000);
-        resource.setAmount(5);
-        dude.setResource(resource);
-        Hashtable<String,Object> data = dude.getLifeformInfo();
-        assertEquals(1,data.get(Item.ID));
-        assertEquals("Dude",data.get(Lifeform.NAME));
-        assertEquals("Desc",data.get(Lifeform.DESC));
-        assertEquals(50,data.get(Lifeform.MAX_LIFE));
-        assertEquals(50,data.get(Lifeform.CURRENT_LIFE));
-        assertEquals(-1,data.get(Lifeform.CURRENT_ROOM));
-        assertEquals(10,data.get(Creature.DMG));
-        assertEquals(5,data.get(Creature.ARMOR));
-        assertEquals(15,data.get(Creature.SPEED));
-        Vector<String> zones = (Vector)data.get(Creature.ZONES);
-        assertEquals(2,zones.size());
-        assertEquals("BEACH",zones.elementAt(0));
-        assertEquals("DESERT",zones.elementAt(1));
-    }
-    
-    /**
-     * We need to fix how we store enum values into the database.
-     */
-    @Test
-    public void testConstructCreature()
-    {
-        Creature dude = new Creature(1, "Dude", "Desc", 50, 10, 5, 15);
-        dude.addZone(Zone.BEACH);
-        dude.addZone(Zone.DESERT);
-        Hashtable<String,Object> data = dude.getLifeformInfo();
-        Creature newDude = Creature.constructCreature(data);
-        assertEquals("Dude", newDude.getName());
-        assertEquals("Desc", newDude.getDescription());
-        assertEquals(50,newDude.getCurrentLifePoints());
-        assertEquals(10, newDude.getDamage());
-        assertEquals(5, newDude.getArmor());
-        assertEquals(15, newDude.getSpeed());
-        assertNull(newDude.getResource());
-        
-        assertEquals(2,newDude.getNumValidZones());
-        assertTrue(newDude.canTravel(Zone.DESERT));
-        assertTrue(newDude.canTravel(Zone.BEACH));
-    }
-    
-    @Test
-    public void testGetCreatureInfoWithCreatureResourceAndZones()
-    {
-        assertTrue(false);
     }
 
 }

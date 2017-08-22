@@ -8,23 +8,14 @@ import sw.environment.TheWorld;
 import sw.environment.Zone;
 import sw.lifeform.Creature;
 import sw.lifeform.NPC;
-import sw.lifeform.PC;
-import sw.quest.task.KillCreatureTask;
-
-/**
- * This world is used by a wide range of tests to make sure they are working correctly.
- * @author cdgira
- *
- */
+import sw.lifeform.Player;
+import sw.quest.CreatureQuest;
 
 public class DemoWorld
 {
     
-    public static boolean ACTIVE = true;
-     
-    
     public static void constructDemoWorld()
-    {   
+    {
         TheWorld world = TheWorld.getInstance();
         
         
@@ -68,13 +59,13 @@ public class DemoWorld
         forestCreatureRes.setSpecialCreatureRate(0);
         
         // Construct two NPCs for Quests
-        KillCreatureTask mountainQuest = new KillCreatureTask("Mountain Quest","Kill mountain creature",mountainCreature,1);
+        CreatureQuest mountainQuest = new CreatureQuest("Mountain Quest","Kill mountain creature",mountainCreature,1);
         NPC mountainQuestDude = new NPC(1,"Mountain Quest Dude", "I give the mountain creature quest.",100,10,5,15);
         mountainQuestDude.addAssignableQuest(mountainQuest);
         room1.addRoomObserver(mountainQuestDude);
         room2.addRoomObserver(mountainQuestDude);
         
-        KillCreatureTask forestQuest = new KillCreatureTask("Forest Quest","Kill forest creature",forestCreature,1);
+        CreatureQuest forestQuest = new CreatureQuest("Forest Quest","Kill forest creature",forestCreature,1);
         NPC forestQuestDude = new NPC(2,"Forest Quest Dude", "I give the forest creature quest",100,10,5,15);
         forestQuestDude.addAssignableQuest(forestQuest);
         room3.addRoomObserver(forestQuestDude);
@@ -107,30 +98,16 @@ public class DemoWorld
         room4.addCreatureResource(forestCreatureRes);
         forestCreatureRes.addSpawnObserver(room4);
         
-        PC demoPlayer = new PC(1, "Demo Player", "Demo Player for Too Many Games 2013", 100);
+        Player demoPlayer = new Player(1, "Demo Player", "Demo Player for Too Many Games 2013", 100);
         
-        PC demoPlayer2 = new PC(2, "Demo Player2", "Demo Player2 for Too Many Games 2013", 100);
-        
-        room7.addPC(demoPlayer);
-        room7.addPC(demoPlayer2);
+        room7.addPlayer(demoPlayer);
         room6.addNPC(forestQuestDude);
         room7.addNPC(mountainQuestDude);
 
         world.addPlayer(demoPlayer);
-        world.addPlayer(demoPlayer2);
         
         world.addNPC(mountainQuestDude);
         world.addNPC(forestQuestDude);
-    }
-    
-    public static PC getPlayer()
-    {
-        return TheWorld.getInstance().getPlayer(1);
-    }
-    
-    public static PC getPlayer2()
-    {
-        return TheWorld.getInstance().getPlayer(2);
     }
 
 }

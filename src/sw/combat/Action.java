@@ -1,6 +1,6 @@
 package sw.combat;
 
-public abstract class Action
+public class Action
 {
 	ActionType a_type;
 	public Action(ActionType type)
@@ -12,6 +12,4 @@ public abstract class Action
 	{
 		return a_type;
 	}
-	
-	public abstract void apply();
 }

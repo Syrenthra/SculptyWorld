@@ -1,6 +1,5 @@
 package sw.environment;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -9,9 +8,8 @@ import java.util.Vector;
 
 import sw.item.Item;
 import sw.lifeform.Creature;
-import sw.lifeform.Lifeform;
 import sw.lifeform.NPC;
-import sw.lifeform.PC;
+import sw.lifeform.Player;
 import sw.quest.Goal;
 import sw.time.TimeObserver;
 
@@ -27,15 +25,6 @@ import sw.time.TimeObserver;
  */
 public class Room implements TimeObserver, SpawnObserver, Goal
 {
-    public static final String ID = "ID";
-    public static final String TITLE = "TITLE";
-    public static final String DESCRIPTION = "DESCRIPTION";
-    public static final String ZONE = "ZONE";
-    public static final String EXITS = "EXITS";
-    public static final String ITEMS = "ITEMS";
-    public static final String PCs = "PCs";
-    public static final String CREATURES = "CREATURES";
-    
     protected int m_id;
 
     protected String m_title;
@@ -48,7 +37,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
 
     protected Vector<Item> m_items = new Vector<Item>();
 
-    protected Hashtable<Integer, PC> m_pcs = new Hashtable<Integer, PC>();
+    protected Hashtable<Integer, Player> m_players = new Hashtable<Integer, Player>();
 
     protected Hashtable<Integer, Creature> m_creatures = new Hashtable<Integer, Creature>();
 
@@ -58,10 +47,6 @@ public class Room implements TimeObserver, SpawnObserver, Goal
 
     Vector<RoomObserver> m_observers = new Vector<RoomObserver>();
 
-    public Room(String title, String description)
-    {
-        this(-1,title,description);
-    }
     /**
      * Constructs the room.
      * @param title
@@ -104,7 +89,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
         {
             m_exits.put(exit, room);
         }
-        RoomEventTracker.getInstance().addEvent(this,exit, RoomUpdateType.EXIT_ADDED);
+        informObservers(exit, SWRoomUpdateType.EXIT_ADDED);
 
     }
 
@@ -131,7 +116,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
         {
             m_items.add(item);
         }
-        RoomEventTracker.getInstance().addEvent(this,item, RoomUpdateType.ITEM_ADDED);
+        informObservers(item, SWRoomUpdateType.ITEM_ADDED);
 
     }
     
@@ -145,7 +130,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
         {
             m_items.remove(item);
         }
-        RoomEventTracker.getInstance().addEvent(this,item, RoomUpdateType.ITEM_REMOVED);
+        informObservers(item, SWRoomUpdateType.ITEM_REMOVED);
 
     }
 
@@ -158,55 +143,22 @@ public class Room implements TimeObserver, SpawnObserver, Goal
     {
         synchronized (m_items)
         {
-            if (m_items.size() > location)
-                return m_items.get(location);
-            else
-                return null;
+            return m_items.get(location);
         }
-    }
-    
-    /**
-     * Returns the Vector of items in the room.
-     * @return
-     */
-    public Vector<Item> getItems()
-    {
-        return m_items;
     }
 
-    /**
-     * 
-     * @param itemName
-     * @return The item in the room based on it's name. If multiple, returns the first one found.
-     */
-    public Item getItem(String itemName)
-    {
-        Item item = null;
-        synchronized (m_items)
-        {
-            for (int index=0;index<m_items.size();index++)
-            {
-                if (m_items.elementAt(index).getName().equals(itemName))
-                {
-                    item = m_items.remove(index);
-                }
-            }
-        }
-        return item;
-    }
-    
     /**
      * Adds a player to the room.
      * @param dude
      */
-    public void addPC(PC dude)
+    public void addPlayer(Player dude)
     {
-        synchronized (m_pcs)
+        synchronized (m_players)
         {
-            m_pcs.put(dude.getID(), dude);
+            m_players.put(dude.getID(), dude);
             dude.setCurrentRoom(this);
         }
-        RoomEventTracker.getInstance().addEvent(this,dude, RoomUpdateType.PLAYER_ADDED);
+        informObservers(dude, SWRoomUpdateType.PLAYER_ADDED);
 
     }
 
@@ -215,11 +167,11 @@ public class Room implements TimeObserver, SpawnObserver, Goal
      * @param location
      * @return
      */
-    public PC getPC(int id)
+    public Player getPlayer(int id)
     {
-        synchronized (m_pcs)
+        synchronized (m_players)
         {
-            return m_pcs.get(id);
+            return m_players.get(id);
         }
     }
 
@@ -237,7 +189,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
                 m_creatures.put(dude.getID(), dude);
             }
         }
-        RoomEventTracker.getInstance().addEvent(this,dude, RoomUpdateType.CREATURE_ADDED);
+        informObservers(dude, SWRoomUpdateType.CREATURE_ADDED);
 
     }
 
@@ -286,7 +238,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
                 creature.setCurrentRoom(null);
             }
         }
-        RoomEventTracker.getInstance().addEvent(this,creature, RoomUpdateType.CREATURE_REMOVED);
+        informObservers(creature, SWRoomUpdateType.CREATURE_REMOVED);
         return creature;
     }
 
@@ -307,14 +259,6 @@ public class Room implements TimeObserver, SpawnObserver, Goal
     {
         return m_id;
     }
-    
-    /**
-     * Sets the unique ID for the room.
-     */
-    public void setID(int value)
-    {
-        m_id = value;
-    }
 
     /**
      * 
@@ -323,7 +267,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
      */
     public boolean hasPlayer(int id)
     {
-        PC player = m_pcs.get(id);
+        Player player = m_players.get(id);
 
         if (player != null)
             return true;
@@ -383,17 +327,17 @@ public class Room implements TimeObserver, SpawnObserver, Goal
      */
     public void removePlayer(int id)
     {
-        PC player = null;
-        synchronized (m_pcs)
+        Player player = null;
+        synchronized (m_players)
         {
-            player = m_pcs.get(id);
-            m_pcs.remove(id);
+            player = m_players.get(id);
+            m_players.remove(id);
             if ((player != null) && (player.getCurrentRoom() == this))
             {
                 player.setCurrentRoom(null);
             }
         }
-        RoomEventTracker.getInstance().addEvent(this,player, RoomUpdateType.PLAYER_REMOVED);
+        informObservers(player, SWRoomUpdateType.PLAYER_REMOVED);
     }
 
     /**
@@ -407,7 +351,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
             m_npcs.put(npc.getID(), npc);
             npc.setCurrentRoom(this);
         }
-        RoomEventTracker.getInstance().addEvent(this,npc, RoomUpdateType.NPC_ADDED);
+        informObservers(npc, SWRoomUpdateType.NPC_ADDED);
 
     }
 
@@ -440,7 +384,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
                 npc.setCurrentRoom(null);
             }
         }
-        RoomEventTracker.getInstance().addEvent(this,npc, RoomUpdateType.NPC_REMOVED);
+        informObservers(npc, SWRoomUpdateType.NPC_REMOVED);
         return npc;
     }
 
@@ -477,15 +421,6 @@ public class Room implements TimeObserver, SpawnObserver, Goal
             }
             return exits;
         }
-    }
-    
-    /**
-     * Returns the Hashtable of all the player characters presently in the room.
-     * @return
-     */
-    public Hashtable<Integer,PC> getPCs()
-    {
-        return m_pcs;
     }
     
     
@@ -583,7 +518,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
                         {
                             Creature creature = e.nextElement();
 
-                            if (resource.getCreature().equals(creature))
+                            if (resource.getCreature().isSame(creature))
                             {
                                 activate = false;
                                 break;
@@ -607,7 +542,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
     public void addCreatureResource(CreatureResource resource)
     {
         m_creatureResources.add(resource);
-        RoomEventTracker.getInstance().addEvent(this,resource, RoomUpdateType.CREATURE_RESOURCE_ADDED);
+        informObservers(resource, SWRoomUpdateType.CREATURE_RESOURCE_ADDED);
     }
 
     /**
@@ -635,7 +570,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
      * 
      * @param type What type of change has occurred.  This helps the different observers focus on what has changed.
      */
-    protected void informObservers(Object source, RoomUpdateType type)
+    public void informObservers(Object source, SWRoomUpdateType type)
     {
         Vector<RoomObserver> temp = new Vector<RoomObserver>(m_observers.size());
 
@@ -658,7 +593,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
     public void removeCreatureResource(int index)
     {
         CreatureResource resource = m_creatureResources.remove(index);
-        RoomEventTracker.getInstance().addEvent(this,resource, RoomUpdateType.CREATURE_RESOURCE_REMOVED);
+        informObservers(resource, SWRoomUpdateType.CREATURE_RESOURCE_REMOVED);
     }
 
     /**
@@ -668,7 +603,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
     public void removeCreatureResource(CreatureResource source)
     {
         if (m_creatureResources.remove(source))
-            RoomEventTracker.getInstance().addEvent(this,source, RoomUpdateType.CREATURE_RESOURCE_REMOVED);
+            informObservers(source, SWRoomUpdateType.CREATURE_RESOURCE_REMOVED);
     }
 
     @Override
@@ -711,178 +646,5 @@ public class Room implements TimeObserver, SpawnObserver, Goal
 
         return returnExits;
     }
-    
-    /**
-     * Returns the information that defines the room in the form of a Hashtable.
-     * @return
-     */
-    public Hashtable<String,Object> getRoomInfo()
-    {
-        Hashtable<String,Object> data = new Hashtable<String,Object>();
-        
-        data.put(ID, this.m_id);
-        data.put(TITLE, m_title);
-        data.put(DESCRIPTION, m_description);
-        data.put(ZONE, m_zone.name());
-        
-        Hashtable<String,Integer> exits = new Hashtable<String,Integer>();
-        Enumeration<Exit> e = this.m_exits.keys();
-        while (e.hasMoreElements())
-        {
-            Exit key = e.nextElement();
-            Room r = m_exits.get(key);
-            exits.put(key.name(), r.getID());
-        }
-        data.put(EXITS, exits);
-        
-        Vector<Integer> items = new Vector<Integer>();
-        for (Item i : m_items)
-        {
-            items.add(i.getItemID());
-        }
-        data.put(ITEMS, items);
-        
-        Vector<Integer> pcs = new Vector<Integer>();
-        Enumeration<Integer> ePC = m_pcs.keys();
-        while (ePC.hasMoreElements())
-        {
-            pcs.add(ePC.nextElement());
-        }
-        data.put(PCs, pcs);
-        
-        Vector<Integer> creatures = new Vector<Integer>();
-        Enumeration<Creature> eCreatures = m_creatures.elements();
-        while (eCreatures.hasMoreElements())
-        {
-            creatures.add(eCreatures.nextElement().getID());
-        }
-        data.put(CREATURES, creatures);
-        
-        return data;
-    }
-    
-    /**
-     * Constructs a room from a Hashtable filled with information.
-     * @param data
-     * @return
-     */
-    public static Room constructRoom(Hashtable<String, Object> data)
-    {
-        int id = (Integer)data.get(ID);
-        String title = (String)data.get(TITLE);
-        String description = (String)data.get(DESCRIPTION);
-        Room room = new Room(id,title,description);
-        String zone = (String)data.get(ZONE);
-        room.setZone(Zone.valueOf(zone));
-        return room;
-    }
-    
-    /**
-     * Returns if the player is in the room with the name provided.
-     * @param name
-     * @return
-     */
-    public boolean hasPlayer(String name)
-    {
-        boolean contains = false;
-        Enumeration<PC> e = m_pcs.elements();
-        while (e.hasMoreElements())
-        {
-            if (e.nextElement().getName().equals(name))
-            {
-                contains = true;
-                break;
-            }
-        }
-        return contains;
-    }
-    
-    /**
-     * Returns the player in the room with the name provided.
-     * @param name
-     * @return
-     */
-    public PC getPlayer(String name)
-    {
-        boolean found = false;
-        PC player = null;
-        Enumeration<PC> e = m_pcs.elements();
-        while (e.hasMoreElements())
-        {
-            player = e.nextElement();
-            if (player.getName().equals(name))
-            {
-                found = true;
-                break;
-            }
-        }
-        if (found)
-            return player;
-        else
-            return null;
-    }
-    
-    /**
-     * Looks in the room for the lifeform with the name provided.  Checks in
-     * order of PC, NPC, Creature.
-     * 
-     * This can be optimized by improving the data structures, but will only matter in
-     * a room with lots of people to sort through.
-     * 
-     * TODO This makes unique names very important.
-     * 
-     * @param name
-     * @return
-     */
-    public Lifeform getLifeform(String name)
-    {
-        boolean found = false;
-        Lifeform entity = null;
-        // Search the PCs
-        Enumeration<PC> ePC = m_pcs.elements();
-        while (ePC.hasMoreElements())
-        {
-            entity = ePC.nextElement();
-            if (entity.getName().equals(name))
-            {
-                found = true;
-                break;
-            }
-        }
-        if (found)
-            return entity;
-        
-        // Search the NPCs
-       Enumeration<NPC> eNPC = m_npcs.elements(); 
-       while (eNPC.hasMoreElements())
-       {
-           entity = eNPC.nextElement();
-           if (entity.getName().equals(name))
-           {
-               found = true;
-               break;
-           }
-       }
-       if (found)
-           return entity;
-        
-       // Search the Creatures
-       Enumeration<Creature> eCreature = m_creatures.elements(); 
-       while (eCreature.hasMoreElements())
-       {
-           entity = eCreature.nextElement();
-           if (entity.getName().equals(name))
-           {
-               found = true;
-               break;
-           }
-       }
-       if (found)
-           return entity;
-       
-       
-       // Else we found nothing.
-       return null;
-    }
-    
+
 }

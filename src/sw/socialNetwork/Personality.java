@@ -1,5 +1,6 @@
 package sw.socialNetwork;
 
+import sw.lifeform.SocialNPC;
 
 /**
  * @author David Abrams
@@ -121,7 +122,7 @@ public class Personality
 	private boolean validDesiredFriends(int value)
 	{
 		boolean result = false;
-		if(value <= SocialNetwork.MAX_FRIENDS)
+		if(value <= SocialNPC.MAX_FRIENDS)
 		{
 			result = true;
 		}
