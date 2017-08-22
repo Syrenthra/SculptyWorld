@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>400</x>
+      <y>160</y>
+      <w>210</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>Send a Command
+--
+Player types in a command</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>580</x>
+      <y>120</y>
+      <w>220</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+Message
+Sent to Server</panel_attributes>
+    <additional_attributes>200;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>780</x>
+      <y>130</y>
+      <w>350</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Message Recieved
+--
+Message is received (SWServerConnection) 
+and processed (InWorldState) by taking the first
+word and seeing which command it matches.
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1100</x>
+      <y>130</y>
+      <w>190</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+Run the
+Command</panel_attributes>
+    <additional_attributes>170;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1270</x>
+      <y>140</y>
+      <w>470</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Determine and Run Command
+--
+The command (sub-class of InWorldCommand) is 
+executed.  Commands create a result (CommandResult)
+that stores which player did the command, a msg
+for the player as to what happened, and a message
+to other players as to what happened.  The result
+is sent out as a room event (Room and RoomObserver)
+in the room that the player caused the event.  
+Some events (e.g. MoveCommand) can cause events in multiple
+rooms.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1050</x>
+      <y>250</y>
+      <w>240</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+Room notifies all
+observers of an update.</panel_attributes>
+    <additional_attributes>30;50;220;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>670</x>
+      <y>260</y>
+      <w>410</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Inform What Happened
+--
+The InWorldState listens for room updates for
+the room the Player's character is presently
+in.  Any such events that have a message attached
+are sent out to the message system(SWServerConnection).</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>460</x>
+      <y>240</y>
+      <w>230</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+Message
+Sent to the Player</panel_attributes>
+    <additional_attributes>30;50;210;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>270</x>
+      <y>280</y>
+      <w>220</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>See the Result
+--
+Display the message to the
+player as to what happened.</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

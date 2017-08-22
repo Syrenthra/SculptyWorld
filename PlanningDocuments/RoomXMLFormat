@@ -1,0 +1,21 @@
+Room XML Format
+
+Info to store:
+Room ID					***Stored in a different column***
+Room Title				<Title>	</Title>
+Room Description		<Desc> 	</Desc>
+Room Zone				<Zone> 	</Zone>
+Exits from the Room 	<Exit> 	</Exit>
+Items in the Room 		<Item> 	</Item>
+Creatures in the Room
+NPCs in the Room
+Players in the Room
+Creature resources in the Room
+Observers for the Room
+
+<Item>
+Hammer of Thor
+</Item>
+<Item>
+Sword of Odin
+</Item>

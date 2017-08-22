@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>170</x>
+      <y>0</y>
+      <w>130</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Control
+Mood</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>270</x>
+      <y>10</y>
+      <w>330</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-&gt;&gt;
+Intimacy (Strength)
+Trust (Rate of Decay)
+Trend (direction quests have been going)
+</panel_attributes>
+    <additional_attributes>310;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>580</x>
+      <y>10</y>
+      <w>160</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Control
+Mood
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>520</x>
+      <y>180</y>
+      <w>410</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>Attachment Attributes
+--
+Intimacy - Centers on the strength of an attachment.
+(Strength of Relationship)
+--
+Trust - Is the extent to which an attachment is stable.
+(Affects rate of decay over time)
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>0</x>
+      <y>180</y>
+      <w>500</w>
+      <h>430</h>
+    </coordinates>
+    <panel_attributes>Entity Attributes
+--
+Control - How entities cope with viloations (How forgiving) 
+of the other Attributes.
+(How much the entity lets a mistake affect the Intimacy)
+--
+Trend - Affects Trust.  Completed quests change Trust for good.
+Failed quests change Trust for bad.  Possibly want a different rate
+for each.
+(Models Change in Trust)
+--
+Mood - Have two moods : Happy and Angry.  Have a set chance to 
+become happy and a chance to become angry.
+Completing a Quest -&gt; Chance to be Happy (Help attachements)
+Failing a Quest -&gt; Chance to be Angry (Harm attachments)
+(Controls Types of Quests)
+(Every time tick Entities can affect the mood of a neighbor, 
+chance to change a neighbor to it's present mood. - Use percents
+from paper)
+--
+What about a max number of attachments?
+ 
+Maximum number of attachments will be 5 to limit the size of the
+model.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>950</x>
+      <y>180</y>
+      <w>470</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Broker Nodes vs. Standard Nodes
+--
+Broker Nodes - Have access to more resources.
+To be a Broker Node you need to be the only node connected to 
+another cluster.  </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>800</x>
+      <y>460</y>
+      <w>550</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>Quest Generation Rate
+Gift quests are more likely to be generated when...
+   -In reponse to a recieving a gift (greater chance for more valuable gifts)
+   -When beginning a new relationship
+--
+Happy: Generate quests when attachements weaken by a set amount
+Happy: Generate a quest to strengthen a relationship
+Happy: Generate a quest to create a new relationship
+--
+Angry: Generate a quest to weaken some else's attachement</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>810</x>
+      <y>750</y>
+      <w>450</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Look at Gift Giving papers to discern some sort of rate of
+gift giving.
+
+What determines someone giving a gift?
+Like to give gifts when they first meet.
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>80</x>
+      <y>680</y>
+      <w>470</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Calculating social capital
+ 
+total capital value of a relationship = Control * Trust * Intimacy
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

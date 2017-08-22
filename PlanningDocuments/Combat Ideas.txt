@@ -1,0 +1,40 @@
+-------------------------------------------------------------------------------------
+-									SculptyWorld									-
+-									Allan Simmons									-
+-																					-
+-									MUD Combat										-
+-------------------------------------------------------------------------------------
+
+
+Current System:
+-Damaging an enemy
+	-Damage = WeaponDamage - Armor
+	-WeaponDamage calculated at source, passed into target
+	-Target caluclates final damage after armor, mitigations, weakness, etc
+-Enemies considered dead when HP reaches 0
+-Player unconcious and bleeding when HP reaches 0; dead at HP = -Con
+
+
+-------------------------------------------------------------------------------------
+
+
+Ideas:
+-Modifying WeaponDamage on user end; Power Attack?
+-Modifying Damage on target end; implement weakness, etc.
+-AC as DR? or Hit chance?
+	-Block chance?
+-Spells?
+	-Casting Time
+	-Damage
+	-Damage Type
+	-Adding conditions
+-Damage types
+-Timer for when to attack/ DoT effects (bleeding, etc.)
+-Combat Maneuvers
+-Combat modifiers (prone, unconcious, etc.)
+-Armor has Def and MagDef
+-Dual Wielding, Two Handers, Sword and Board, Torch (maybe just treat as weapon)
+-Light level modifying hit chance
+-AOE attacks
+	-Determine Targets (hit all in room?)
+	-Damage for distance from center?

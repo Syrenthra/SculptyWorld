@@ -1,0 +1,129 @@
+SculptyWorld Dynamic Social Network Design Change Log
+
+8-29-13
+NPC Class
+-refactored design of SocialNPC class
+	-changed name of NPC class to SocialNPC (NPC class was already present in the project)
+	-made SocialNPC a child of NPC
+	-added arguments to the constructor of SocialNPC to match the constructor of NPC
+	-removed name instance variable from SocialNPC (already tracked by  NPC)
+	-changed AvailableQuests from an array to an ArrayList
+	-changed instance variable personalLikes to favoriteItems (more descriptive)
+	-removed instance variables currentFriends (no need, just find size of the ArrayList)
+	-replaced setters for Friends, AvailableQuests, and FavoriteItems with add and remove methods (better to interact with ArrayLists)
+	-removed add and remove methods for Relationships (happens in add/removeFriends methods, respectively)
+	-changed all instance variables from private to protected in order to make future extension of SocialNPC easier
+	-changed issueQuest to assignQuest (lines up better with parent)
+
+
+8-30-13
+-refactored SocialNPC
+	-added a currentTime instance variable to facilitate testing
+	-changed update to updateTime (lines up naming conventions already in place)
+	-added moodSwap() (cleaner code)
+	
+8-31-13
+-refactored SocialQuest class
+	-removed questTurnIn() from SocialQuest (method with the same functionality already present in parent)
+	-changed questCompleted() to questSuccessful() (name more clear)
+	
+9-2-13
+-refactored QuestGenerator
+	-made QuestGenerator implement RoomObserver so that it can know what Items are available in the game world
+	-added itemsInWorld to keep track of valid items for quest objectives
+	-added an overloaded version of createGiftQuest() without the gift parameter (allows gift to be specified OR randomly selected) 
+-refactored GiftQuest
+	-added setGift() to GiftQuest (facilitiates testing)
+	-removed gift argument from constructor
+-refactored Feelings
+	-renamed Trend to trustTrend in (more specific)
+	-implemented TimeObserver (makes more sense for Feelings to control decay of intimacy, rather than SocialNPC)
+-refactored SocialNPC
+	-added checkFriendships() (need a way to identify unproductive relationships)
+
+
+9-6-13
+-refactored SocialNPC
+	-removed FavorTarget parameter from askFavor() and replyFavor() (unnecessary for purpose of methods)
+	-renamed argument in replyFavor() from target to requester (more cleary)
+	-added difficulty argument to askFavor() and replyFavor() (allows SocialNPC to weigh difficulty of favor against social debt)
+-added enum to keep track of difficulty levels for social quests
+
+9-11-13
+-refactored SocialNPC
+	-changed replyFavor() to evaluateFavorQuest() (more descriptive name)
+	-added clearQuests()
+-moved FavorTarget from socialNetwork package to quest package (location makes more sense)
+-refactored QuestGenerator
+	-changed all "create" prefixes in method names to "gen" (makes more sense since the class is the quest generator, not quest creater)
+	-changed "target" argument of genReqFavorQuest() to "requester" (more descriptive)
+	-changed "difficulty" argument of genReqFavorQuest() from int to SocialQuestDifficulty
+	-added an overloaded version of genReqFavQuest() that does not require the FavorTarget to be specified
+-refactored FavorQuest
+	-changed "difficulty" instance variable from int to SocialQuestDifficulty
+-refactored Feelings class
+	-adjusted range of values for relationship factors to give a more useful range of potential values for the social worth of a relationship
+		-changed range of Intimacy from [1, 20] to [1, 100]
+		-changed range of Trust from [1, 10] to [-5, 5]
+
+9-13-13
+-refactored Feelings class
+	-changed Feelings to implement TimeObserver so that each relationship can manage its own decay
+-refactored SocialNPC class
+	-added changeMoodQuest() to handle mood changes originating from the failure/completion of a SocialQuest
+	-changed changeMood() to changeMoodPropagation() (more descriptive) 
+
+9-14-13
+-refactored QuestGenerator
+	-added questNumbers to keep track of how many of each type of SocialQuest has been created for naming purposes
+	-changed QuestGenerator into a singleton
+-refactored SocialQuest
+	-added getQuestGiver() and getQuestTarget()
+-refactored SocialNPC
+	-removed setQuestGenerator()
+	
+9-15-13
+-refactored SocialQuest
+	-changed timeToHoldLimit to timeToHoldRemaining (won't need a second counter for time elapsed)
+	-changed timeToCompleteLimit to timeToCompleteRemaining (won't need a counter for time elapsed)
+-refactored GiftQuest, FavorQuest, RequestFavorQuest, and HomewreckerQuest
+	-added name argument to constructors
+
+9-16-13
+-refactored QuestGenerator
+	-added rand instance variable to make generating random numbers more fluid
+
+9-25-13
+-refactored SocialQuest
+	-added enum QuestState to keep track of valid states of SocialQuests
+	-added instance variable along with getters and setters to keep track of QuestState
+	-changed questCompleted() to questSuccessful() (name more clearly describes the purpose of the method)
+9-27-13
+-refactored GiftQuest
+	-removed delivered variable because of duplicate functionality to currentState in parent
+	-removed turnInQuest() because no additional functionality was needed over the version defined in SocialQuest
+-refactored SocialQuest and FavorQuest
+	-pulled difficulty up to SocialQuest
+
+9-28-13
+-refactored SocialNPC
+	-added hasFriend() method
+-refactored FavorQuest
+	-removed "completed" instance variable (duplicate functionality to currentQuestState in SocialQuest)
+	-added calculateRelationshipChange() in order to support relationship strength  modification varying with difficulty of the quest
+	-removed turnInQuest() because no additional functionality was needed over the version defined in SocialQuest
+
+9-29-13
+-renamed Attributes enum to FeelingsAttributes (more clear)
+-refactored HomewreckerQuest
+	-changed targetRelationship to an array of Feelings so as to be able to keep track of both parts of the relationship to be damaged
+	-removed turnInQuest() (not needed here, handled in SocialQuest)
+	-added getters for targetRelationship and targetAttribute
+	-added targetAttribute instance variable so that the quest knows what part of the relationship to damage
+	-added BASE_CHANGE to better facilitate calculating amount of intimacy to remove from the relationship
+	-added calculateIntimacyDamage() to better facilitate damaging the intimacy of the relationship
+	-removed questFailed() (not needed - would be identical to overridden method in parent since the quest doesn't do anything special if failed)
+
+10-5-13
+-refactored SocialNPC
+	-added turnInQuest() to SocialNPC to handle the SocialNPC's actions when a player hands in a finished SocialQuest

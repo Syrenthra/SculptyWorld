@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>460</x>
+      <y>780</y>
+      <w>360</w>
+      <h>700</h>
+    </coordinates>
+    <panel_attributes>Package::environment
+/Room/
+--
+#m_id: int
+#m_title: String
+#m_description: String
+#m_zone: Zone
+#m_exits: Hashtable&lt;Exit,Room&gt;
+#m_items: Vector&lt;Item&gt;
+#m_creatures: Hashtable&lt;Integer,Creature&gt;
+#m_players: Hashtable&lt;Integer,Player&gt;
+#m_npcs: Hashtable&lt;Integer,NPC&gt;
+--
+Room(id: int, title: String, description: String)
++addCreature(dude: Creature)
++addExit(room: Room, exit: Exit)
++addItem(item: Item)
++addNPC(npc: NPC)
++addPlayer(dude: Player)
++addRoomObserver(observer: RoomObserver)
++getCreature(id: int): Creature
++getCreatures(): Creature[]
++getDescription(): String
++getExit(exit: Exit): Room
++getID(): int
++getItem(location: int): Item
++getNPC(id: int): NPC
++getNumCreatures(): int
++getPlayer(id: int): Player
++getZone(): Zone
++getTitle(): String
++hasPlayer(id: int): boolean
++informObservers()
++removeCreature(id: int): Creature
++removeNPC(id: int): NPC
++removePlayer(id: int)
++removeRoomObsever(obsever: RoomObserver)
++setZone(zone: Zone)
+--
+Responsibilities
+Keeps track of the objects and people
+in a specific room.  Concrete rooms 
+observe a RoomTimer.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>10</x>
+      <y>1610</y>
+      <w>300</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>Package::environment
+InsideRoom*
+--
+
+--
+
+--
+Responsibilities
+Is a room type for rooms inside
+buildings.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>120</x>
+      <y>1450</y>
+      <w>470</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>450;30;30;160</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>720</x>
+      <y>1450</y>
+      <w>150</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;130;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>790</x>
+      <y>1080</y>
+      <w>150</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;130;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>890</x>
+      <y>970</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Package::lifeform
+Creature
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>920</x>
+      <y>1090</y>
+      <w>150</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>Package::lifeform
+Player
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>790</x>
+      <y>960</y>
+      <w>120</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;100;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>690</x>
+      <y>1540</y>
+      <w>400</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>Package::environment
+OutsideRoom
+--
+-m_creatureResources: Vector&lt;CreatureResource&gt;
+-m_observers: Vector&lt;RoomObserver&gt;
+--
+OutsideRoom(id: int, name: String, desc: String)
++addCreatureResource(resource: CreatureResource)
++addRoomObserver(observer: RoomObserver)
++getCeatureResource(location: int): CreatureResource
++informObservers()
++notify(spawn: Creature)
++removeCreatureResource(index: int)
++removeRoomObsever(obsever: RoomObserver)
++updateTime(time: int)
+--
+Responsibilities
+Is a room that represents part of a
+forest.  Resources are slowly rebuilt
+so long as they aren't killed off or
+consumed too rapidly.  A Resource is remove
+if the amount of resources it has equals 0.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1060</x>
+      <y>1570</y>
+      <w>110</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;90;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1150</x>
+      <y>1300</y>
+      <w>480</w>
+      <h>430</h>
+    </coordinates>
+    <panel_attributes>Package::environment
+CreatureResource
+--
+-m_creature: Creature
+-m_amount: int
+-m_maxAmount: int
+-m_recoverRate: int
+-m_spawnRate: int
+-m_observers:Vector&lt;SpawnObervers&gt;
+--
+CreatureResource(dude: Creature, max: int, recoverRate: int, spawnRate: int)
++addSpawnObserver(observer: SpawnObserver)
++getAmount(): int
++getCreature(): Creature
++getMaxAmount(): int
++getRecoverRate(): int
++getSpawnRate(): int
++removeSpawnObserver(observer: SpawnObserver)
++setAmount(count: int)
++spawn()
++update(time: int)
+--
+Responsibilities
+Resources recovery at a specific rate, with a 
+certain maximum. Gets updates from the Resource
+Timer so it knows when to spawn new creatures or
+increase the amount of creatures it can spawn. </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>170</x>
+      <y>740</y>
+      <w>280</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::environment
+Zone
+--
+ROAD, FOREST, CITY, RURAL, DESSERT,
+PLAINS, MOUNTAIN, JUNGLE, BEACH</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1700</x>
+      <y>1550</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Package::lifeform
+Creature
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1600</x>
+      <y>1540</y>
+      <w>120</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;100;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1150</x>
+      <y>1160</y>
+      <w>130</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Package::time
+TimeObserver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1180</x>
+      <y>1200</y>
+      <w>50</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>30;30;30;100</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>40</x>
+      <y>1250</y>
+      <w>380</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>bg=orange
+Creatures and Players will need to be able to
+know who's in the room with them and the
+exits from the room or how to just look at the
+room.  Would like to figure out how to get this
+information without tightly coupling the lifeforms
+to the Rooms with another Has-A link.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1230</x>
+      <y>1000</y>
+      <w>370</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Package::environment
+Spawn
+--
++addSpawnObserver(observer: SpawnObserver)
++removeSpawnObserver(observer: SpawnObserver)
++spawn()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>850</x>
+      <y>1360</y>
+      <w>230</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Package::environment
+SpawnObserver
+--
++spawnUpdate(spawn:Creature)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1050</x>
+      <y>1400</y>
+      <w>120</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>100;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1420</x>
+      <y>1090</y>
+      <w>50</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>30;30;30;210</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>920</x>
+      <y>1420</y>
+      <w>50</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>30;30;30;120</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>0</x>
+      <y>890</y>
+      <w>430</w>
+      <h>320</h>
+    </coordinates>
+    <panel_attributes>Whenever new creatures are spawned in a room, the
+room will check to see if any resources have
+been reduced to 0 creatures.  If they have, then
+that resource is removed.
+--
+Rooms notify observers by sending the room
+itself to the observers.
+--
+When a room has a creature of the type that the
+a resource spawns already it won't listen to the
+resource.  Resources that have no one listening
+will not spawn new creatures, only increase the
+amount they can spawn.
+--
+Rooms will be attached to a special RoomTimer
+that will inform them of when to check and update
+the status of a room (such as reattaching to
+resources).</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>180</x>
+      <y>370</y>
+      <w>380</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>bg=orange
+Create a special "Spawn" room.  It only connects
+to a resource when it is full and as such will
+spawn a creture that will create a new resource.
+
+--
+A resource at max amount will burn half that
+amount and create a special creature that
+roams and can setup a new resource.
+--
+If a generator station is reduced to zero by 
+farming that room ceases to generate creatures.
+--
+A means for players to create their own houses
+and rooms in the world.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>950</x>
+      <y>440</y>
+      <w>320</w>
+      <h>410</h>
+    </coordinates>
+    <panel_attributes>Package::environment
+TheWorld
+--
+_-m_theWorld: TheWorld_
+-m_rooms: Hashtable&lt;Integer,Room&gt;
+-m_players: Hashtable&lt;Integer,Player&gt;
+-m_npcs: Hashtable&lt;Integer,NPC&gt;
+-m_creatures: Hashtable&lt;Integer,Creature&gt;
+--
+-TheWorld()
++addCreature(creature: Creature)
++addNPC(npc: NPC)
++addRoom(room: Room)
++getCreature(id: int): Creature
+_+getInstance():TheWorld_
++getNCP(id: int): NPC
++getPlayer(id: int): Player
++getRoom(id: int): Room
++move(player: Player, exit: Exit )
++removeCreature(id: int)
++removeNPC(id: int)
++removePlayer(player: Player)
+--
+Responsibilities
+This keeps track of the world and all things
+that are in it.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>460</x>
+      <y>1450</y>
+      <w>210</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>190;30;30;160</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>510</x>
+      <y>640</y>
+      <w>130</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Package::time
+TimeObserver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>510</x>
+      <y>680</y>
+      <w>50</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>30;30;30;100</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1160</x>
+      <y>1740</y>
+      <w>500</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Package::environment
+RoomObserver
+--
++roomUpdate(room: Room,source: Object, type: SWRoomUpdateType)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1060</x>
+      <y>1740</y>
+      <w>120</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;100;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>640</x>
+      <y>1960</y>
+      <w>130</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Package::quest
+Goal
+--
+--
+
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>700</x>
+      <y>1860</y>
+      <w>50</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>30;100;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>340</x>
+      <y>1610</y>
+      <w>330</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Package::environment
+SpawnRoom*
+--
+-creatureResources: Vector&lt;Resource&gt;
+--
++notify(spawn: Creature)
+--
+Responsibilities
+This room (normally hidden) will only connect
+to it's resource if the resource is ready to
+spawn a special creature that will go create
+a new resource.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>720</x>
+      <y>730</y>
+      <w>250</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>230;30;30;30;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>940</x>
+      <y>820</y>
+      <w>50</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;30;150</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1020</x>
+      <y>820</y>
+      <w>50</w>
+      <h>290</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;30;270</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1380</x>
+      <y>750</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Package::lifeform
+NPC
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1240</x>
+      <y>760</y>
+      <w>160</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;140;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>590</x>
+      <y>410</y>
+      <w>340</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Recode Room to use a Hashtabel to track
+players.
+--
+Need to create a new area that groups
+rooms together called ????.
+--  
+A room can belong to more than one ????
+--
+???? will help determine which players get
+credit for questing together.
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>690</x>
+      <y>630</y>
+      <w>230</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::environment
+Exit
+--
+NORTH, SOUTH, EAST, WEST</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>1230</x>
+      <y>80</y>
+      <w>410</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>bg=blue
+As creatures, players, rooms, etc... are added into
+the game they need to register with TheWorld to get
+connected to specific timers.
+--
+TheWorld acts as a RoomObserver.  The Room forwards
+all add and remove events to observers.  This
+is how new objects get attached or removed from 
+the required timers.
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>990</x>
+      <y>310</y>
+      <w>130</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Package::time
+RoomObserver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1030</x>
+      <y>350</y>
+      <w>50</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>30;30;30;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1170</x>
+      <y>1890</y>
+      <w>430</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::sw.environment
+SWRoomUpdateType
+--
+CREATURE_ADDED, CREATURE_REMOVED, PLAYER_ADDED,
+PLAYER_REMOVED, CREATURE_RESOURCE_ADDED, 
+CREATURE_RESOURCE_REMOVED, NPC_ADDED, 
+NPC_REMOVED</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>620</x>
+      <y>120</y>
+      <w>1150</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>Package: sw.net
+SWServerConnection
+--
+m_serverState: ServerConnectionState
+-m_outgoingQueue: Vector&lt;SWMessage&gt;
+m_run: boolean
+m_client: SecureObjectSocketInterface&lt;SWMessage&gt;
+--
+SWSecureServerConnection(wlos: SecureObjectSocketInterface&lt;SWMessage&gt;, threadgroup: ThreadGroup, threadname: String, vulture: ServerVulture, app: SWServer)
++closeClient()
++getClient(): SecureObjectSocketInterface&lt;SWMessage&gt;
++getServerConnectState(): ServerConnectionState
++run()
++toString(): String
++setServerConnectionState(state: ServerConnectionState)
++sendMessage(msg: SWMessage)
++getNextMessage(): SWMessage
++removeNextMessage(): SWMessage
+--
+Responsibilities
+-- Resp1
+*-- Resp2*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1920</x>
+      <y>120</y>
+      <w>360</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>Package: sw.net.msg
+SWMessage
+--
+-m_token: SWToken
+-m_message: String
+--
++SWMessage(msg: String)
++setSecurityToken(token: SWToken)
++getSecurityToken(): SWToken
++getMessage(): String
++containsValidMsg(token: SWToken): boolean
+--
+Responsibilities
+-- Resp1
+*-- Resp2*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1740</x>
+      <y>140</y>
+      <w>200</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;180;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1120</x>
+      <y>0</y>
+      <w>210</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Package: net
+/SecureServerConnection/
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1180</x>
+      <y>30</y>
+      <w>50</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>140</x>
+      <y>540</y>
+      <w>350</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>Package: sw.net
+/SWSocket/
+--
+m_token: SWToken
+m_messageReader: SWReadObjectThread
+--
++connect(host: String, port: int)
++connect(s: SSLSocket)
++initializeMessage(msg: SWMessage)
++isValidMessage(msg: SWMessage): boolean
++writeObject(obj: SWMessage)
++readObject(): SWMessage
++setToken(newToken: SWToken)
+--
+Responsibilities
+-- Resp1
+*-- Resp2*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>200</x>
+      <y>400</y>
+      <w>210</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Packag: net
+/SecureObjectSocket/
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>440</y>
+      <w>50</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;100</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>220</x>
+      <y>260</y>
+      <w>210</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+Package: net
+SecureObjectSocketInterface
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>290</x>
+      <y>300</y>
+      <w>50</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>30;30;30;100</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>400</x>
+      <y>270</y>
+      <w>240</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>220;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>630</x>
+      <y>620</y>
+      <w>320</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>Package: sw.net
+SWReadObjectThread
+--
+m_messages: Vector&lt;byte[]&gt;
+m_in: DataInputStream
+--
+SWReadObjectThread(in: DataInputStream)
++run()
++getNextMessage(): byte[]
+--
+Responsibilities
+-- Resp1
+*-- Resp2*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>630</x>
+      <y>510</y>
+      <w>210</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Package: java.lang
+Thread
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>710</x>
+      <y>550</y>
+      <w>50</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;70</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>460</x>
+      <y>620</y>
+      <w>190</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;170;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2670</x>
+      <y>700</y>
+      <w>380</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+Package: sw.environment.commands
+InWorldCommand
+--
++processCommand(command: String, player: Player)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1740</x>
+      <y>410</y>
+      <w>160</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;140;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2430</x>
+      <y>890</y>
+      <w>380</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Package: sw.environment.commands
+DropCommand
+--
++processCommand(command: String, player: Player)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2570</x>
+      <y>760</y>
+      <w>220</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>200;30;30;130</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1880</x>
+      <y>410</y>
+      <w>280</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Package: sw.net.state
+/ServerConnectionState/
+--
+m_message: String
+m_connection: SWServerConnection
+--
+/+executeAction(msg: SWMessage)/
+/+getMessage(): SWMessage/
++setMessage(message: String)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1870</x>
+      <y>650</y>
+      <w>500</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>Package: sw.net.state
+InWorldState
+--
+m_userID: int
+m_character: Player
+m_availableCommands: Hashtable&lt;String,InWorldCommand&gt;
+--
+InWorldState(connection: SWServerConnection, id: int, character: Player)
+-constructCommandTable()
++executeAction(msg: SWMessage)
++getMessage(): SWMessage
++getUserID(): int
++getCharacter(): Player
++roomUpdate(room: Room, source: Object, type: RoomUpdateType)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2050</x>
+      <y>520</y>
+      <w>50</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;130</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2210</x>
+      <y>500</y>
+      <w>210</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+RoomObserver
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2140</x>
+      <y>540</y>
+      <w>150</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>130;30;30;110</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1550</x>
+      <y>650</y>
+      <w>210</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Package: sw.lifeform
+Player
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1730</x>
+      <y>650</y>
+      <w>160</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>140;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2340</x>
+      <y>700</y>
+      <w>350</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;330;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2870</x>
+      <y>890</y>
+      <w>380</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Package: sw.environment.commands
+EquipCommand
+--
++processCommand(command: String, player: Player)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2920</x>
+      <y>760</y>
+      <w>130</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>30;30;110;130</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>3280</x>
+      <y>640</y>
+      <w>490</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>Package: sw.environment.commands
+CommandResult
+--
+m_playerName: String
+m_playerMsg: String
+m_otherMsg: String
+--
+CommandResult(pName: String, playerMsg: String, otherMsg: String)
++getPlayerName(): String
++getMsgForPlayer(): String
++getMsgForOthers(): String
+--
+This is used to store the information of a room update generated 
+by a command. Stores the player that caused the event and the 
+messages to send related to the event.</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

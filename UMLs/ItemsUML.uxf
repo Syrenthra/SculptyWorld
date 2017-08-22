@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1210</x>
+      <y>480</y>
+      <w>210</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+Is-A</panel_attributes>
+    <additional_attributes>30;50;190;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1400</x>
+      <y>450</y>
+      <w>530</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>Package::item
+ItemContainer
+--
+-m_capacity: int
+-m_items: Vector&lt;Item&gt;
+--
+ItemContainer(name: String, desc: String, size: int, weight: int, capacity: int)
++getCapacity(): int
+--
+Responsibilities
+Used to represent a piece of armor
+that can be worn by a player.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1210</x>
+      <y>440</y>
+      <w>210</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;
+Has-A</panel_attributes>
+    <additional_attributes>190;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>860</x>
+      <y>270</y>
+      <w>380</w>
+      <h>310</h>
+    </coordinates>
+    <panel_attributes>Package::item
+/Item/
+--
+#m_name: String
+#m_description: String
+#m_size: int
+#m_weight: int
+--
+Item(name: String, desc: String, size: int, weight: int)
++getDescription(): String
++getName(): String
++getSize(): int
++getWeight(): int
+--
+Responsibilities
+Use to reprsent base class of different
+item types in the game. Size determines
+how much capacity the item requires for
+storage. Weight is how much the item
+weighs in grams.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>990</x>
+      <y>550</y>
+      <w>110</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;90;130</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>950</x>
+      <y>680</y>
+      <w>570</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>Package::item
+Weapon
+--
+-m_damage: int
+-m_hands: int
+
+--
+Weapon(name: String, desc: String, size: int, weight: int, damage: int, hands: int)
++getDamage(): int
++getNumHands(): int 
+--
+Responsibilities
+Used to represent a weapon.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>780</x>
+      <y>550</y>
+      <w>220</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>200;30;30;130</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>320</x>
+      <y>680</y>
+      <w>600</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Package::item
+Armor
+--
+-m_location: ArmorLocation
+-m_protection: int
+
+--
+Armor(name: String, desc: String, size: int, weight: int, loc: ArmorLocation, prot: int) 
++getLocation(): ArmorLocation
++getProtection(): int
+--
+Responsibilities
+Used to represent a piece of armor
+that can be worn by a player.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1400</x>
+      <y>320</y>
+      <w>210</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>Package::environment
+/Room/
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>720</x>
+      <y>300</y>
+      <w>160</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>30;30;140;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>600</x>
+      <y>310</y>
+      <w>150</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Package::quest
+ItemQuest
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1210</x>
+      <y>310</y>
+      <w>210</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>190;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>620</x>
+      <y>0</y>
+      <w>210</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::item
+WeaponLocation
+--
+RIGHT
+LEFT
+--
+Responsibilities
+Places players can keep items.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>680</y>
+      <w>210</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::item
+ArmorLocation
+--
+Armor
+LEGS
+BODY
+HEAD
+HANDS
+FEET
+--
+Responsibilities
+Places players can keep items.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1080</x>
+      <y>40</y>
+      <w>210</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::item
+ContainerLocation
+--
+BELT
+BACK
+--
+Responsibilities
+Places players can keep items.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>180</x>
+      <y>690</y>
+      <w>160</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>140;30;30;30</additional_attributes>
+  </element>
+</diagram>

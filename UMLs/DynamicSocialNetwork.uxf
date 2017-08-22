@@ -1,0 +1,1121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.1">
+  <zoom_level>7</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2499</x>
+      <y>882</y>
+      <w>189</w>
+      <h>238</h>
+    </coordinates>
+    <panel_attributes>Package::network
+Feelings
+--
+-intimacy: int
+-trust: int
+-trend: int
+-socialDebtOwed: int
+--
++Feelings()
++calculateSocialWorth(): int
++trendIncrement()
++trendDecrement()
++getIntimacy(): int
++getTrust(): int
++getSocialDebt(): int
++setIntimacy(newValue: int)
++setTrust(newValue: int)
++setSocialDebt(newValue: int)
+--
+Responsibilities
+This class keeps track of how one
+NPC feels about another.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2023</x>
+      <y>728</y>
+      <w>420</w>
+      <h>784</h>
+    </coordinates>
+    <panel_attributes>Package::lifeform
+SocialNPC
+--
+-friends:ArrayList&lt;SocialNPC&gt;
+-relationships: Hashtable&lt;SocialNPC, Feelings&gt;
+-availableQuests: ArrayList&lt;SocialQuest&gt;
+-favoriteItems: ArrayList&lt;Items&gt;
+-questGenerator: QuestGenerator
+-personability: int
+-totalDesiredFriends: int
+-totalDesiredCapital: int
+-currentCapital: int
+-control: double
+-currentMood: Moods
+-grumpiness: double
+-lastQuestResult: SocialQuestState
+-rand: Random
+-frReqList: Hashtable&lt;SocialNPC, FriendRequest&gt;
+-frResponseList: Hashtable&lt;SocialNPC, FriendRequest&gt;
+-favors: ArrayList&lt;Favor&gt;
+-events: ArrayList&lt;SocialNetworkEvent&gt;
+-sim: Simulation
+--
++SocialNPC(id: int, name: String, desc: String, life: int, damage: int, armor: int, speed: int)
++pickNewFriends()
++findAcceptedRequests(): ArrayList&lt;SocialNPC&gt;
++evalFriendRequests(potentialNewFriends: int)
++sendFriendRequests(potentialNewFriends: int)
++sendFriendRequest(target: SocialPC)
++receiveFriendRequest(request: FriendRequest)
++removeFriendRequest(target: SocialNPC)
++cleanFrReqList(list: FriendRequestLists)
++pickNewFriendshipTarget(): SocialNPC
++updateCapital()
++askFavor(target: SocialNPC)
++evaluateFavorRequest(requester: SocialNPC)
++assignQuest(player Player, questNum: int)
++assignQuest(player: Player, quest: SocialQuest)
++turnInQuest(quest: SocialQuest)
+-payForQuest(SocialQuest: quest)
+-payForQuest(SocialQuestDifficulty: difficulty)
++updateTime(time: int)
++makeHomewreckerQuest(): SocialQuest
++changeMoodPropagation()
++changeMoodQuest()
+-moodSwap()
++identifyUnproductiveRelationships: ArrayList&lt;SocialNPC&gt;
++identifyLowIntimacyFriends(): ArrayList&lt;SocialNPC&gt;
++identifyLowTrustFriends(): ArrrayList&lt;SocialNPC&gt;
++identifyGrowingRelationships(): ArrayList&lt;SocialNPC&gt;
++toString(): String
++addFriend(friend: SocialNPC)
++removeFriend(friend: SocialNPC)
++hasFriend(frirend: SocialNPC): boolean
++addQuest(quest: SocialQuest)
++removeQuest(quest: SocialQuest)
++clearQuests()
++addFavoriteItem(item: Item)
++removeFavoriteItem(item: Item)
+
++get...attributes()
++set...attributes()
++addFriend(newFriend: SocialNPC, feelings: Feelings)
++addFriend(newFriend: SocialNPC)
++removeFriend(npc: NPC)
++removeFriendSet(toBeRemoved: ArrayList&lt;SocialNPC&gt;)
++addFavoriteItem(item: Item)
++removeFavoriteItem(item: Item)
++newEvent(target: SocialNPC, type: EventTypes)
+--
+Responsibilities
+NPCs form the nodes of the network, and relationships form
+the edges. This class keeps track of which other NPCs this
+one knows and how this NPC feels toward each of his friends.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2422</x>
+      <y>903</y>
+      <w>90</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>21;21;77;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1260</x>
+      <y>826</y>
+      <w>553</w>
+      <h>266</h>
+    </coordinates>
+    <panel_attributes>Package::network
+QuestGenerator
+--
+-questNumbers: Array&lt;int&gt;
+-itemsInWorld: ArrayList&lt;Item&gt;
+-instance: QuestGenerator
+-rand: Random
+--
+-QuestGenerator()
++static getInstance(): QuestGenerator
++clear()
++genGiftQuest(questGiver: SocialNPC, target: SocialNPC, gift: Item): GiftQuest
++genGiftQuest(questGiver: SocialNPC, target: SocialNPC): GiftQuest
++genFavorQuest(questGiver: SocialNPC, target: SocialNPC, favor: FavorTarget): FavorQuest
++genFavorQuest(questGiver: SocialNPC, target: SocialNPC): FavorQuest
++genReqFavQuest(giver: SocialNPC, target: SocialNPC, objective: FavorTarget): RequestFavorQuest
++genReqFavQuest(giver: SocialNPC, target: SocialNPC): RequestFavorQuest
++genHomewreckerQuest(giver: SocialNPC, relationship: ArrayList&lt;Feelings&gt;): HomewreckerQuest
++decideDifficulty(npc: SocialNPC): SocialQuestDifficulty
++roomUpdate(room: Room, source: Object, type: SWRoomUpdateType)
+--
+Responsibilities
+This class creates a new social quest for an NPC based on the current state of the DSN.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1792</x>
+      <y>819</y>
+      <w>244</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>21;21;231;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1379</x>
+      <y>616</y>
+      <w>98</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>Package::lifeform
+Player
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1456</x>
+      <y>609</y>
+      <w>580</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>21;21;91;21;91;147;567;147</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1176</x>
+      <y>763</y>
+      <w>860</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>21;21;847;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1176</x>
+      <y>805</y>
+      <w>97</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>creates
+lt=&lt;-</panel_attributes>
+    <additional_attributes>21;35;84;35</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>602</x>
+      <y>1120</y>
+      <w>476</w>
+      <h>294</h>
+    </coordinates>
+    <panel_attributes>Package::quest
+GiftQuest
+--
+-gift: Item
+-giftValue: int
+-BASE_CHANGE: int
+-BONUS: int
+--
++GiftQuest(name: String, giver: NPC, target: NPC, gift: Item, value: int, difficulty: SocialQuestDifficulty)
++questSuccessful()
++questFailed()
++deliver()
++setGift(newGift: Item)
++getGift(): Item
++getGiftValue(): int
+--
+Responsibilities
+Deliver a gift to another NPC.
+ 
+Completion: 
+  -Increases Intimacy for both NPCs
+  -Amount of increase determined by how valuable the gift is.
+  -Bonus Intimacy if the gift is an item that the receiving NPC likes.
+  -Receiver is socially indebted to the giver
+Failure:
+  -Intimacy penalty for both NPCs.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>819</x>
+      <y>1022</y>
+      <w>34</w>
+      <h>111</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;21;98</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1120</x>
+      <y>609</y>
+      <w>272</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>259;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>2702</x>
+      <y>749</y>
+      <w>252</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>bg=blue
+Intimacy - strength of attachment
+Ranges from 1 to 100
+1: barely knows the other individual
+100: knows every detail about the other person
+Increases by:
+-completing certain quests
+Decreases by:
+-decays over time</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>2702</x>
+      <y>875</y>
+      <w>252</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>bg=blue
+Trust - rate of Intimacy decay
+Ranges from -5 to 5
+-5: does not trust the individual at all
+5: trusts the individual completely
+Increases by:
+-completing successive request quests
+(tracked by trend)
+Decreases by:
+-request quest failed
+-HomewreckerQuest</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>2702</x>
+      <y>1029</y>
+      <w>252</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>bg=blue
+Trend:
+Ranges between -3 and 3
+Keeps track of how many quests have been completed 
+or failed in a row. Must reach either max or min 
+value before trust can change.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1379</x>
+      <y>574</y>
+      <w>98</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>Package::item
+Item
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1456</x>
+      <y>560</y>
+      <w>580</w>
+      <h>195</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>567;182;105;182;105;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1036</x>
+      <y>567</y>
+      <w>356</w>
+      <h>566</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>343;21;182;21;182;511;21;511;21;553</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>2023</x>
+      <y>1533</y>
+      <w>336</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>bg=blue
+Control - how forgiving this NPC when an action would negatively
+impact the Intimacy of one of its relationships.
+Ranges from 0 to 1
+0: this NPC does not give any leeway
+1: this NPC gives the maximum amount of leeway
+Control can be interpreted as how "forgiving" an
+NPC is when another NPC violates their social
+contract. Control is a scalar that adjusts the
+penalty incurred when one NPC does not fulfill a request from another.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1379</x>
+      <y>658</y>
+      <w>98</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Package::time
+TimeObserver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1456</x>
+      <y>658</y>
+      <w>580</w>
+      <h>125</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>21;21;77;21;77;112;567;112</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1841</x>
+      <y>0</y>
+      <w>119</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::socialNetwork
+Moods
+--
+HAPPY
+ANGRY
+--
+Responsibilities
+Keeps track of valid 
+moods of an NPC.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1043</x>
+      <y>616</y>
+      <w>98</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Package::quest
+/Quest/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1071</x>
+      <y>623</y>
+      <w>34</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;21;119</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1092</x>
+      <y>658</y>
+      <w>300</w>
+      <h>97</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>287;21;21;21;21;84</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>2702</x>
+      <y>1113</y>
+      <w>252</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>bg=blue
+Positiveness:
+Cannot be accurately represented in this model, so
+it will not be used.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1120</x>
+      <y>1120</y>
+      <w>483</w>
+      <h>259</h>
+    </coordinates>
+    <panel_attributes>Package::quest
+FavorQuest
+--
+-objective: FavorTarget
+-BASE_CHANGE: int
+--
++FavorQuest(name: String, giver: NPC, target: NPC, objective: FavorTarget, difficulty: SocialQuestDifficulty)
++questSuccessful()
++questFailed()
+-CalculateRelationshipChange(): int
++getFavorTarget(): FavorTarget
++setFavorTarget(newTarget: FavorTarget)
+--
+Responsibilities
+Do a favor for another NPC.
+ 
+Completion: 
+  -Increases Intimacy for both NPCs
+  -Amount of increase determined by how
+   difficult the favor task is.
+Failure:
+  -Intimacy penalty for both NPCs.
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1141</x>
+      <y>1022</y>
+      <w>34</w>
+      <h>111</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;21;98</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1302</x>
+      <y>378</y>
+      <w>259</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Package::item
+/FavorTarget/
+--
+-Vector&lt;FavorQuest&gt; quests
+--
++performFavorAction(player: Player)
++addQuest(quest: FavorQuest)
++removeQuest(quest:FavorQuest)
++hasQuest(quest: FavorQuest): boolean
+--
+Responsibilities
+This abstract class must be implemented by
+any class that will be used as a target for
+FavorQuests.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1099</x>
+      <y>1435</y>
+      <w>539</w>
+      <h>147</h>
+    </coordinates>
+    <panel_attributes>Package::quest
+RequestFavorQuest
+--
++RequestFavorQuest(name: String, giver: NPC, requester: NPC, objective: FavorTarget, difficulty: SocialQuestDifficulty)
++questSuccessful()
++questFailed()
+--
+Responsibilities
+An NPC wants a favor from another NPC.
+ 
+Completion:
+  -Additionally, increases Trust between both NPCs.
+Failure:
+  -Additionally, decreases Trust between both NPCs.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1358</x>
+      <y>1358</y>
+      <w>34</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;21;77</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>1120</y>
+      <w>595</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>Package::quest
+HomewreckerQuest
+--
+-targetRelationship: ArrayList&lt;Feelings&gt;
+-targetAttribute: FeelingsAttributes
+-BASE_CHANGE: int
+--
++HomewreckerQuest(name: String, giver: NPC, target: NPC, targetRelationships: ArrayList&lt;Feelings&gt;, difficulty: SocialQuestDifficulty)
++questSuccessful()
+-calculateIntimacyDamage(): int
++getTargetRelationship(): ArrayList&lt;Feelings&gt;
++getTargetAttribute(): FeelingsAttributes
+--
+Responsibilities
+An NPC wants to hurt the relationship of another NPC.
+ 
+Completion:
+  -The Intimacy  OR Trust of the target relationship decreases.
+Failure:
+  -No change of any relationships.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>294</x>
+      <y>1022</y>
+      <w>475</w>
+      <h>111</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>462;21;462;56;21;56;21;98</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1176</x>
+      <y>784</y>
+      <w>860</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>21;21;847;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2317</x>
+      <y>623</y>
+      <w>98</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>Package::lifeform
+NPC
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2674</x>
+      <y>301</y>
+      <w>90</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>77;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1855</x>
+      <y>875</y>
+      <w>112</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Package::environment
+RoomObserver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1792</x>
+      <y>868</y>
+      <w>76</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>63;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1456</x>
+      <y>574</y>
+      <w>279</w>
+      <h>265</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>266;252;266;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1575</x>
+      <y>0</y>
+      <w>140</w>
+      <h>147</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::quest
+SocialQuestDifficulty
+--
+EASY
+MEDIUM
+HARD
+YOUMUSTBEPRO
+--
+-SocialQuestDifficulty(diff: int)
++getDifficulty(): int
+--
+Responsibilities
+Keeps track of difficulty levels
+for social quests.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>630</x>
+      <y>742</y>
+      <w>567</w>
+      <h>301</h>
+    </coordinates>
+    <panel_attributes>Package::quest
+/SocialQuest/
+--
+-questGiver: SocialNPC
+-target: SocialNPC
+-timeToHoldRemaining: int
+-timeToCompleteRemaining: int
+-currentState: QuestState
+-difficulty: SocialQuestDifficulty
+--
++SocialQuest(name: String, desc: String, questGiver: SocialNPC, target: SocialNPC, difficulty: difficulty: SocialQuestDifficulty)
++update()
++questSuccessful()
++questFailed()
++turnInQuest()
++updateTime(name: String, time: int)
++getQuestGiver(): SocialNPC
++getQuestTarget(): SocialNPC
++getTimeToHoldRemaining(): int
++setTimeToHoldRemaining(time: int)
++getTimeToCompleteRemaining(): int
++setTimeToCompleteRemaining(time: int)
++getCurrentState(): QuestState
++setCurrentState(newState: QuestState)
+--
+Responsibilities
+The goal of this quest is to solve a social problem between two NPCs.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1722</x>
+      <y>0</y>
+      <w>112</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::socialNetwork
+SocialQuestState
+--
+SUCCESS
+FAILURE
+IN_PROGRESS
+--
+Responsibilities
+Keeps track of valid
+end states for quests.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1456</x>
+      <y>0</y>
+      <w>112</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::socialNetwork
+FeelingsAttributes
+--
+INTIMACY
+TRUST
+--
+Responsibilities
+Keeps track of valid
+attributes of Feelings
+for HomewreckerQuest
+to modify.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2499</x>
+      <y>1344</y>
+      <w>308</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>Package::network
+FriendRequest
+--
+-requester: SocialNPC
+-requestee: SocialNPC
+-state: FriendRequestStatus
+--
++FriendRequest(requester: SocialNPC, requestee: SocialNPC)
++accept()
++reject()
++getState(): FriendRequestStatus
++getRequester(): SocialNPC
++getRequestee(): SocialNPC
+--
+Responsibilities
+This class is used when one SocialNPC tries to initiate a new
+relationship with another SocialNPC.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2422</x>
+      <y>1337</y>
+      <w>90</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>21;21;77;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2093</x>
+      <y>0</y>
+      <w>140</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::socialNetwork
+FriendRequestStatus
+--
+WAITING
+ACCEPTED
+REJECTED
+--
+Responsibilities
+Keeps track of valid 
+states of a friendship request</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1967</x>
+      <y>0</y>
+      <w>119</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::socialNetwork
+FriendRequestLists
+--
+REQUEST_LIST
+RESPONSE_LIST
+--
+Responsibilities
+Keeps track of the two
+types of FriendRequest
+lists in SocialNPC.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2499</x>
+      <y>1169</y>
+      <w>280</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>Package::network
+Favor
+--
+-requester: SocialNPC
+-SocialQuestDifficulty: difficulty
+-state: FriendRequestStatus
+--
++Favor(requester: SocialNPC, difficulty: SocialQuestDifficulty)
++getRequester(): SocialNPC
++getDifficulty(): SocialQuestDifficulty
+--
+Responsibilities
+This class is used by SocialNPC to easily keep track of who
+it has agreed to perform favors for and how difficult a favor
+it decded to do.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2422</x>
+      <y>1162</y>
+      <w>90</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>21;21;77;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1407</x>
+      <y>497</y>
+      <w>34</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;21;77</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1232</x>
+      <y>497</y>
+      <w>118</w>
+      <h>643</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>105;21;105;238;21;238;21;630</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2184</x>
+      <y>287</y>
+      <w>511</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>Package::simulation
+Simulation
+--
+-population: int
+-questSuccessRate: double
+-npcs: ArrayList&lt;SocialNPC&gt;
+-rand: Random
+-thePlayer: Player
+-totalTurns: int
+-holesPresent: boolean
+-networkCohesion: int
+-fileName: String
+-filePath: String
+-fileWriter: BufferedWriter
+--
++Simulation(numSNPCs: int, runLength: int, cohesion: int, holes: boolean, questSuccessRate: double, expNum: int)
+-setUp()
++run()
+-processTurnEvents(happenings: ArrayList&lt;SocialNetworkEvent&gt;)
+-createTurnLog: String
+-createFileHeaders(): String
+-createTotals(): String
+-printEvents()
+--
+Responsibilities:
+This class creates a world, loads it with SNPCs based on its initialization parameters, and runs it for the given
+number of turns. The actions and decisions of the SNPCs are logged and written to a file.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2212</x>
+      <y>546</y>
+      <w>34</w>
+      <h>195</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>21;182;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2247</x>
+      <y>0</y>
+      <w>182</w>
+      <h>203</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Package::simulation
+EventTypes
+--
+	FRIEND_REQUEST_SENT
+	FRIEND_REQUEST_RECIEVED
+	FRIEND_REQUEST_ACCEPTED
+	FRIEND_REQUEST_REJECTED
+	QUEST_CREATED_GIFTQUEST
+	QUEST_CREATED_FAVORQUEST
+	QUEST_CREATED_REQFAVQUEST
+	QUEST_CREATED_HOMEWRECKER
+	QUEST_SUCCESSFUL
+	QUEST_FAILED
+	FRIENDSHIP_CREATED
+	FRIENDSHIP_TERMINATED
+--
+Responsibilities
+Keeps track of different types of events.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2233</x>
+      <y>546</y>
+      <w>34</w>
+      <h>195</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>21;21;21;182</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1757</x>
+      <y>308</y>
+      <w>357</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>Package::simulation
+SocialNetworkEvent
+--
+-sender: SocialNPC
+-target: SocialNPC
+-type: EventTypes
+--
++SocialNetworkEvent(sender: SocialNPC, target: SocialNPC, type: EventTypes)
+--
+Responsibilities:
+This class encapsulates one decision or event.
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1995</x>
+      <y>392</y>
+      <w>72</w>
+      <h>349</h>
+    </coordinates>
+    <panel_attributes>Creates
+lt=&lt;-&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>42;21;42;336</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2093</x>
+      <y>287</y>
+      <w>104</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>Handles
+lt=&lt;-</panel_attributes>
+    <additional_attributes>21;35;91;35</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>2751</x>
+      <y>294</y>
+      <w>175</w>
+      <h>266</h>
+    </coordinates>
+    <panel_attributes>Package::simulation
+EventLog
+--
+-numFRsSent: int
+-numFRsReceived: int
+-numFRsAccepted: int
+-numFRsRejected: int
+-numGiftQuestCreated: int
+-numFavorQuestCreated: int
+-numReqFavQuestCreated: int
+-numHomewreckerQuestCreated: int
+-numQUestSuccessful: int
+-numQuestFailed: int
+-numFriendshipsCreated: int
+-numFriendshipsFailed: int
+-totalCapitalGained: int
+-capitalSpentOnQuests: int
+-numTimesChangedToAngry: int
+-numTimesChangedToHappy: int
+--
++clearEvents()
++increment...()
+--
+Responsibilities:
+This class keeps track of how
+many of each event occur.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2345</x>
+      <y>637</y>
+      <w>34</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;21;91</additional_attributes>
+  </element>
+</diagram>
