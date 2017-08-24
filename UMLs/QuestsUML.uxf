@@ -4,30 +4,30 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1110</x>
-      <y>930</y>
-      <w>250</w>
-      <h>130</h>
+      <x>340</x>
+      <y>580</y>
+      <w>490</w>
+      <h>120</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>230;30;30;110</additional_attributes>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>470;30;30;100</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1480</x>
-      <y>930</y>
-      <w>110</w>
-      <h>140</h>
+      <x>880</x>
+      <y>580</y>
+      <w>290</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;90;120</additional_attributes>
+    <additional_attributes>30;30;270;100</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1480</x>
-      <y>1050</y>
+      <x>1060</x>
+      <y>680</y>
       <w>540</w>
       <h>280</h>
     </coordinates>
@@ -54,20 +54,18 @@ number of the specific creature.</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>2190</x>
-      <y>810</y>
+      <x>720</x>
+      <y>230</y>
       <w>280</w>
       <h>380</h>
     </coordinates>
     <panel_attributes>Package::quest
-Quest
+/Quest/
 --
 #id: int*
 #m_name: String
 #m_description: String
 #m_players: Vector&lt;Player&gt;
-#m_tasks: Vector&lt;QuestTask&gt;
-#m_rewards: Vector&lt;QuestRewards&gt;
 #m_maxReward: int
 #m_compeleted: boolean
 --
@@ -90,15 +88,14 @@ Base class for all quest types</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>990</x>
-      <y>1040</y>
+      <x>220</x>
+      <y>680</y>
       <w>460</w>
       <h>300</h>
     </coordinates>
-    <panel_attributes>Package::quest.task
-ItemTask
+    <panel_attributes>Package::quest
+ItemQuest
 --
--m_quest: Quest
 -m_goal: Item
 -m_amount: int
 -m_goals: Vector&lt;Goal&gt;
@@ -113,53 +110,50 @@ ItemTask
 +goalVisited(player: Player, index: int): boolean
 --
 Responsibilities
-The goal of this task is a specific item
+The goal of this quest is a specific item
 or items.</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>870</x>
-      <y>1120</y>
-      <w>140</w>
+      <x>120</x>
+      <y>760</y>
+      <w>120</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
-    <additional_attributes>120;30;30;30</additional_attributes>
+    <additional_attributes>100;30;30;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1990</x>
-      <y>1200</y>
-      <w>130</w>
+      <x>1570</x>
+      <y>810</y>
+      <w>150</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
-    <additional_attributes>30;30;110;30</additional_attributes>
+    <additional_attributes>30;30;130;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>3070</x>
-      <y>820</y>
-      <w>230</w>
-      <h>90</h>
+      <x>1250</x>
+      <y>430</y>
+      <w>150</w>
+      <h>50</h>
     </coordinates>
-    <panel_attributes>&lt;&lt;interface
-Package::quest.reward
-QuestReward
---
-getReward(PC: player): Item
+    <panel_attributes>Package::lifeform
+Player
 </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>2100</x>
-      <y>1210</y>
+      <x>1700</x>
+      <y>820</y>
       <w>140</w>
       <h>50</h>
     </coordinates>
@@ -171,24 +165,25 @@ Creature
   <element>
     <type>com.umlet.element.Note</type>
     <coordinates>
-      <x>1430</x>
-      <y>480</y>
+      <x>320</x>
+      <y>120</y>
       <w>360</w>
       <h>120</h>
     </coordinates>
     <panel_attributes>Quests track which players have the quest.
 --
-Quests observer the players and use events sent
-by the PC class to determine how the quest is
-progressing.
+Quests remain clueless about what goes
+on around them and are instead informed about
+what happens by the objects that control them.
+(e.g. NPC's and Players)
 </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>750</x>
-      <y>1130</y>
+      <x>0</x>
+      <y>770</y>
       <w>150</w>
       <h>50</h>
     </coordinates>
@@ -200,19 +195,19 @@ progressing.
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1750</x>
-      <y>920</y>
-      <w>460</w>
+      <x>970</x>
+      <y>430</y>
+      <w>300</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
-    <additional_attributes>440;30;30;30</additional_attributes>
+    <additional_attributes>30;30;280;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Note</type>
     <coordinates>
-      <x>1930</x>
-      <y>580</y>
+      <x>800</x>
+      <y>0</y>
       <w>390</w>
       <h>190</h>
     </coordinates>
@@ -232,19 +227,19 @@ social problems between NPCs.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1660</x>
-      <y>940</y>
+      <x>1240</x>
+      <y>450</y>
       <w>50</w>
-      <h>130</h>
+      <h>250</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
-    <additional_attributes>30;110;30;30</additional_attributes>
+    <additional_attributes>30;230;30;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>820</x>
-      <y>540</y>
+      <x>190</x>
+      <y>360</y>
       <w>360</w>
       <h>180</h>
     </coordinates>
@@ -266,52 +261,13 @@ the quest.</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>2730</x>
-      <y>1000</y>
-      <w>520</w>
-      <h>260</h>
-    </coordinates>
-    <panel_attributes>Package::quest.reward
-SocialReward
---
-m_quest: Quest
-m_target: NPC
-m_cost: SocialCapitolCost
---
-+SocialReward(quest: Quest, questTarget: NPC, cost: SocialCapitolCost)
-+getCost(): SocialCapitolCost
-+setCost(cost: SocialCapitolCost)
-+getTarget(): NPC
-
---
-Responsibilities
-The result of this reward is to modify the social
-network between two NPCs in some way due to a quest
-being completed.  In some cases specific tasks
-are expected.</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>2840</x>
-      <y>880</y>
-      <w>370</w>
-      <h>140</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>350;30;30;120</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>1390</x>
-      <y>1650</y>
-      <w>340</w>
-      <h>180</h>
+      <x>720</x>
+      <y>920</y>
+      <w>300</w>
+      <h>160</h>
     </coordinates>
     <panel_attributes>Package::quest
-Favor
+SocialQuest*
 --
 
 --
@@ -319,535 +275,19 @@ Favor
 /+AbstractOperation()/
 --
 Responsibilities
-What favor does the player need to accomplish
-to complete the quest.</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>1770</x>
-      <y>1730</y>
-      <w>400</w>
-      <h>310</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-FavorQuest
-----------
-Has a name, a description which should explain
-how to complete the quest. There is the SocialNPC
-that gives the quest and the SocialNPC that is the 
-target of the quest.  For this quest the player is
-helping the quest giver do a favor for the quest
-target. 
---
-Other: SocialQuestDifficulty difficulty)
---
-Possible Favors:
-Bring an item to a specific NPC.
-Kill a creatures for a specific NPC.
-Find a specific item and take to an NPC.
-Go talk to a specific NPC.
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>1320</x>
-      <y>1850</y>
-      <w>400</w>
-      <h>400</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-Favor
------
-Need a way to know when parts of the favor is completed.
-If the quest gets update from what the player is doing
-the favor can check those actions to see if it has been
-completed and if so, then the quest is completed.
---
-At present for determining if a player has reached a
-goal:
-1. TheWorld moves the player.
-2. If the new room is a Goal room, then the player
-is informed and the player checks with all his or her
-quests if that goal applies to that quest.
---
-At present there is only limited support for a player
-having to kill creatures for a quest:
-1. There is a method in player that can be used to inform
-the player he has killed a creature.
-2. The player in turn uses a method in Pary that for each
-player in the party goes through all the quests for that
-player to see if killing that creature completes any goals.
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>840</x>
-      <y>1850</y>
-      <w>420</w>
-      <h>500</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-Implementing Favor
-------------------
-We can have the quest listen to the player and
-any actions that happen to the player generate 
-PlayerEvents that the quest can process.
---
-Killed a Creature:
-Event would contain the creature the player had
-killed.
---
-Moved - When current room is changed:
-Event would contain the old room and the new room.
---
-Item Picked Up:
-Event would contain the Item that had been picked
-up.
---
-Item Dropped:
-Event would contain the Item that had been dropped.
---
-Item Given:
-Event would contain the Item that had been given.
---
-Ask about something:
-At present the quest would need to observe the room
-to know what the player said.
-Can update the SayCommand to call a method in PC that
-would trigger a PlayerEvent.  Would contain what
-had been said by the player.</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>0</x>
-      <y>1300</y>
-      <w>410</w>
-      <h>360</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-Creature Quest
-An creature quest is where an NPC tasks a PC to kill a 
-certain number of creatures.  Once those creatures
-have been killed the PC can go to the NPC to turn
-that quest in.
---
-Quest needs to keep track of how many creatures the
-player or the player's party has killed.
---
-IMPORTANT NOTES
----------------
-None</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>490</x>
-      <y>1300</y>
-      <w>410</w>
-      <h>360</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-Item Quest
-An item quest is where the player needs to get
-so many of a certain type of item and take and give
-those items to a specific NPC.
---
-Quest needs to keep track of how many items the player
-needs to get, how many of that item type the player has,
-and how many of that type the player has given an
-NPC.
---
-IMPORTANT NOTES
----------------
-NPCs should not take items from players they are not
-interested in.</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>250</x>
-      <y>870</y>
-      <w>410</w>
-      <h>360</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-Quest Task
-Sets the tasks a player has to complete for the quest.
-Each task needs to track the individual goals for that
-tasks.
-Some tasks may have overlapping goals.
-Each quest tracks who the PC is doing the tasks for.
---
-Example Tasks
-Kill Creatures: Must track number needed to kill and how
-many killed so far.
---
-Deliver Items: Must track how many items to deliever and
-how many have been delivered so far.  Could also track
-how many of those items the player has. May need to 
-track who delievering the items too as that could be
-different that who the task is for.
---
-Talk to NPC: Must track what the player needs to say and
-what the player has said so far.</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>1270</x>
-      <y>730</y>
-      <w>280</w>
-      <h>230</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;Interface&gt;&gt;
-Package::quest.task
-QuestTask
---
-
---
-Quest(name: String, desc: String)
-+processPCEvent(event: PCEvent)
-+percentComplete(player: PC):int
-+addPLayer(player: PC)
-+removePlayer(player: PC)
-+getType(): TaskType
---
-Responsibilities
-The the framework all quest tasks need 
-to follow.</panel_attributes>
+The goal of this quest is to solve a social
+problem between two NPCs</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1520</x>
-      <y>820</y>
-      <w>690</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
-    <additional_attributes>670;30;30;30</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>1630</x>
-      <y>920</y>
-      <w>150</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>Package::lifeform
-Player
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>2440</x>
-      <y>830</y>
-      <w>650</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
-    <additional_attributes>30;30;630;30</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>2440</x>
-      <y>1020</y>
-      <w>310</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-&gt;</panel_attributes>
-    <additional_attributes>290;30;30;30</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>2550</x>
-      <y>1410</y>
-      <w>210</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>Package::quest.reward
-GiftReward
---
-id: Long="36548"
-[waiting for message]</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>2830</x>
-      <y>1410</y>
-      <w>210</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>Package::quest.reward
-HomewreckerReward
---
-id: Long="36548"
-[waiting for message]</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>3100</x>
-      <y>1410</y>
-      <w>210</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>Package::quest.reward
-FavorReward
---
-id: Long="36548"
-[waiting for message]</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>3380</x>
-      <y>1410</y>
-      <w>210</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>Package::quest.reward
-RequestFavorReward
---
-id: Long="36548"
-[waiting for message]</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>2620</x>
-      <y>1230</y>
-      <w>270</w>
-      <h>200</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>250;30;30;180</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>2910</x>
-      <y>1230</y>
+      <x>830</x>
+      <y>580</y>
       <w>50</w>
-      <h>200</h>
+      <h>360</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;30;180</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>3040</x>
-      <y>1230</y>
-      <w>180</w>
-      <h>200</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;160;180</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>3160</x>
-      <y>1230</y>
-      <w>330</w>
-      <h>200</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;310;180</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>2430</x>
-      <y>1560</y>
-      <w>400</w>
-      <h>200</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-Turning in a Quest - Single Player
-------------------
-1. The player should complete all the tasks related
-to the quest.
-2. The player should return to the granter of the
-quest and turn in the quest to the granter.
-3. The granter will then determine the reward for the
-player based on the percent the player completed the
-tasks and give the player an appropriate reward.</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>2880</x>
-      <y>1560</y>
-      <w>590</w>
-      <h>410</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-Turning in a Quest - Party
-------------------
-1. Should each player in the group have the quest?
--Problem: Players can drop in and out of parties, an issue if
--it is a long quest or if players have to leave for the real world.
-1. The players in the group should complete all the tasks related
-to the quest.
-2. Should just one player return to the granter of the
-quest and turn in the quest to the granter or should
-all of the players?
-3. The granter will then determine the reward for the
-players based on the percent the players completed the
-tasks and give the players an appropriate reward.
----------------
-Should there be a way to determine how much each
-player helped?
-For many games unless the players are in close proximity
-when goals are accomplished they don't all get credit.
-In most games all players have the quest and each player
-turns in the quest individually.  This usually means the NPC
-repeats itself multiple times as if the same quest was done
-multiple times.
-Want to avoid this effect as when a quest is done it is done.</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>3550</x>
-      <y>1560</y>
-      <w>440</w>
-      <h>480</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-Getting a Quest
-----------------
-1. Player talks to NPC, NPC offers quest to player. Everyone
-in the same party as the player is offered the quest as well.
---
-2. If a player drops out of the party then: That person
-is no longer helping with that party's quests and has them
-all put in the inactive state.  That way if the player rejoins
-that party they can be active again.  This would be key for
-solo quests and so a player can't leave a party and complete
-the quest without the other's there.
---
-2a. When the person is solo there needs a be a way to rejoin
-this same group so those quests are not lost forever.
---
-3. If a player is added to a group then: Is considered to be
-helping with the quests that party is working on.  Those quests
-are added, but all at 0 percent completion. 
----
-4. Only one person in the party should be able to turn in the
-quest.  Ideally everyone should be present, but that is not
-always going to be the case. 
---
-4a. Experience is easy to split
-up, but the other rewards will be more difficult.  One option
-is to just give them to the player that turned in the quest.
---
-4b. If a player logs out they are considered to still be part of
-the last group he or she belonged to.</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>20</x>
-      <y>1720</y>
-      <w>520</w>
-      <h>310</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-
-When PC gets a quest that has an deliver item task,
-that task updates the target NPC's acceptable item
-list for that player when the quest is active and
-disables for when the quest is in-active.
---
-Each task has two completion percents: individual
-and overall.
----
-A reward will hand any items to the PC that completes
-the quest with the required NPC.  It is up to that PC
-to share the items with the other questers.  Any gold
-for the quest is divided among all that worked on the quest
-based on the percent each individual completed of the
-quest.  If all involved PCs completed the quest to the same
-level then they basically split the gold evenly.  XP is awarded
-by max*indivdual complete percent.</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>60</x>
-      <y>480</y>
-      <w>510</w>
-      <h>320</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-NPCs keep a list of what each player can give them.
---
-Each task of a quest has the ability to add and remove players from this
-list.
---
-An NPC could have multiple tasks that are allowing a player or players
-to deliver a specific item to that NPC.
---
-So when a task is finished how can it let the NPC know without affecting
-the other tasks/quests that might also be going on?
-1. If the task has the NPC remove that item for all players that also have
-the quest it could affect those players if they have one of the other
-quests.
-2. Is there a way to have the other quests be triggered to update
-the NPC accept list after this had occurred?
-3. Need to create a test for this.</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>780</x>
-      <y>90</y>
-      <w>530</w>
-      <h>270</h>
-    </coordinates>
-    <panel_attributes>bg=orange
-What to do when a Quest Fails
-For a quest to fail no player grabbed the quest in time or after getting the
-quest did not complete it in time.
----
-1. All players are removed from the quest.
-2. Any Social Rewards need to have the correct thing
-occur for a failed quest.  This should also inform
-the NPC of what has happened.
----
-What to do with quests that are completed/failed - just
-remove them from the game and forget them?
-</panel_attributes>
-    <additional_attributes/>
+    <additional_attributes>30;30;30;340</additional_attributes>
   </element>
 </diagram>
