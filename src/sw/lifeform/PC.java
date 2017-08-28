@@ -22,6 +22,7 @@ import sw.item.ItemContainer;
 import sw.item.Weapon;
 import sw.quest.Quest;
 import sw.quest.QuestState;
+import sw.quest.reward.FavorReward;
 
 
 /**
@@ -929,4 +930,5 @@ public class PC extends Lifeform
         }
         return false;
     }
+
 }

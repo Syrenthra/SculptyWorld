@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import sw.quest.MockSocialNPC;
+import sw.lifeform.NPC;
 import sw.quest.SocialCapitolCost;
 
 /**
@@ -23,5 +23,14 @@ public class TestFavor
 		
 		assertEquals(snpc, fav.getRequester());
 		assertEquals(SocialCapitolCost.EXTREME, fav.getDifficulty());
+	}
+}
+
+class MockSocialNPC extends NPC
+{
+	public MockSocialNPC() 
+	{
+		super(0, "Mocky", "A mock SocialNPC", 1, 1, 0, 1);
+		// TODO Auto-generated constructor stub
 	}
 }

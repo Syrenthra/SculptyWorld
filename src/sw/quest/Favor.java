@@ -33,7 +33,7 @@ public class Favor
 		while(itr.hasNext())
 		{
 			current = itr.next();
-			if(player.hasQuest(current))
+			if(player.hasQuest(current.))
 			{
 				current.questSuccessful();
 			}

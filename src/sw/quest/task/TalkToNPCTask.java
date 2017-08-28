@@ -47,4 +47,16 @@ public class TalkToNPCTask implements QuestTask
         return null;
     }
 
+	@Override
+	public int overallPercentComplete() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void questStateUpdate(PC player) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

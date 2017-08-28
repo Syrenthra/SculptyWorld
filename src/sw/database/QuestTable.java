@@ -1,5 +1,7 @@
 package sw.database;
 
+import sw.quest.Quest;
+
 public class QuestTable extends SWQuery
 {
    public static final String NAME = "QUEST_TABLE";
@@ -10,11 +12,13 @@ public class QuestTable extends SWQuery
     
     public boolean storeQuest(Quest quest)
     {
+		return false;
         
     }
     
     public Quest loadQuest(int id)
     {
+		return null;
         
     }
 }
