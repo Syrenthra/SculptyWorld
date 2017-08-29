@@ -12,7 +12,9 @@ import sw.lifeform.NPC;
 import sw.lifeform.SocialNPC;
 import sw.quest.FavorQuest;
 import sw.quest.GiftQuest;
+import sw.quest.Quest;
 import sw.quest.RequestFavorQuest;
+import sw.quest.SocialCapitolCost;
 import sw.quest.SocialQuest;
 import sw.quest.SocialQuestDifficulty;
 import sw.socialNetwork.Feelings;
@@ -316,10 +318,11 @@ class MockItem extends Item
 	}
 }
 
-class MockSocialQuest extends SocialQuest
+class MockSocialQuest extends Quest
 {
-	public MockSocialQuest(SocialNPC giver, SocialNPC target) {
-		super("The Quest of Mock", "A mock SocialQuest", giver, target, SocialQuestDifficulty.EASY);
+	public MockSocialQuest(NPC giver, NPC target) 
+	{
+		super("The Quest of Mock", "A mock SocialQuest", giver/*, target, SocialCapitolCost.CHEAP*/);
 		// TODO Auto-generated constructor stub
 	}
 }

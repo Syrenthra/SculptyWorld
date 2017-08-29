@@ -300,6 +300,7 @@ public class Quest implements  PCObserver
      */
     public boolean turnInQuest(PC player)
     {
+    	//We do't have a direct way to fail a quest, while there is a failure in QuestReward
         boolean canCompleteQuest = true;
         if (this.getOverallCompletionPercent() == 100)
         {

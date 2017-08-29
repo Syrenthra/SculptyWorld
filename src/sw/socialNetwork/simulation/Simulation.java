@@ -14,9 +14,9 @@ import sw.environment.Zone;
 import sw.item.Weapon;
 import sw.lifeform.NPC;
 import sw.lifeform.PC;
-import sw.quest.SocialQuest;
+import sw.quest.Quest;
 import sw.socialNetwork.Personality;
-import sw.socialNetwork.QuestGenerator;
+import sw.quest.QuestGenerator;
 import sw.socialNetwork.SocialNetworkDecayRates;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -354,7 +354,7 @@ public class Simulation
 				int j = 0;
 				while(current.getAvailableQuests().size() > j)
 				{
-					SocialQuest quest = current.getAvailableQuests().get(j);
+					Quest quest = current.getAvailableQuests().get(j);
 					/**
 					 * The current SNPCs quests have a chance of being completed based on
 					 * the global quest completion rate.
@@ -362,7 +362,6 @@ public class Simulation
 					num = rand.nextDouble();
 					if(num <= questSuccessRate)
 					{
-						quest.questSuccessful();
 						quest.turnInQuest(thePlayer);
 					}else
 					{

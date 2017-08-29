@@ -1171,6 +1171,12 @@ public class NPC extends Lifeform implements RoomObserver
             }
         }
     }
+    
+    
+    public void setCurrentCapital(int capitol)
+    {
+    	m_socialNetwork.setCurrentCapital(capitol);
+    }
 
     
 }
