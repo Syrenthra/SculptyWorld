@@ -9,7 +9,7 @@ package sw.socialNetwork;
  */
 public class GiftCategories 
 {
-	private int CategoryNum=3;
+	private static int CategoryNum=3;
 	
 	/**
 	 * These categories can be changed at any time, these are placeholder for now.
@@ -18,7 +18,7 @@ public class GiftCategories
 	 * 1-Adventuring Gear
 	 * 2-Nature Items
 	 */
-	public int getCategoryNum()
+	public static int getCategoryNum()
 	{
 		return CategoryNum;
 	}
