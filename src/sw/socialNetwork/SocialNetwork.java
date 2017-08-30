@@ -283,8 +283,12 @@ public class SocialNetwork
                 request = frResponseList.get(current);
                 num = rand.nextDouble();
 
+                //checks for gift category compatibility
+                double modifier=checkCategories(m_myNPC.getCategory(),current.getCategory());
+                
                 //if I want more friends and I pass a personability check...
-                if (!enoughFriends && num <= getPersonability())
+                //the check is affected by the NPC gift categories
+                if (!enoughFriends && num <= (modifier*getPersonability()))
                 {
                     //accept this request
                     acceptFriendRequest(request);
@@ -305,6 +309,52 @@ public class SocialNetwork
     }
 
     /**
+     * TODO: Figure out how to limit and maybe name categories to make less abstract than just #s
+     * 
+     * Determines the compatibility of the NPCs based on their gift categories
+     * @param me the NPC's category
+     * @param target The target's category
+     * @return the modifier value
+     */
+    public double checkCategories(int me, int target) 
+    {
+    	int catNum=GiftCategories.getCategoryNum();
+		/*Category modifier assignments can be changed
+    	* Currently, same category will be liked, 1 higher will be neutral, 1 lower disliked
+    	* where the numbers will be wrapped using modulus
+    	*/
+    	
+    	
+    	int like =me;
+    	int neutral=(me+1)%catNum;
+    	int dislike=(me-1)%catNum;
+    	//If the dislike value goes below 0, this wraps it to the higher category number
+    	if(dislike<0)
+    		dislike+=catNum;
+
+    	if(target==like)
+    	{
+    		return 1.5;
+    	}
+
+    	if(target==neutral)
+    	{
+    		return 1.0;
+    	}
+
+    	if(target==dislike)
+    	{
+    		return 0.5;
+    	}
+    	//If the target has a -1, their category was not set, treated as neutral
+    	if(target==-1)
+    	{
+    		return 1.0;
+    	}
+    	return 1.0;
+	}
+
+	/**
      * Find which FriendRequests that I sent out were accepted.
      * 
      * @return A list of SocialNPCs that accepted FriendRequests from me. The list will be <= my

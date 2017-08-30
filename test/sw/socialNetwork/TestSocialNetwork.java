@@ -881,4 +881,29 @@ public class TestSocialNetwork
         assertNull(bill.pickNewFriendshipTarget());
     }
     
+    /**
+     * This test makes sure that the checkCategories returns to the correct modifiers
+     */
+    @Test
+    public void testCheckCategories()
+    {
+        NPC npc = new NPC(0, "Bob", "He wears overalls.", 50, 5, 10, 1);
+        SocialNetwork socialNet = npc.getSocialNetwork();
+
+        //Checking that neutral works
+        assertEquals(1.0, socialNet.checkCategories(0, 1), error);
+        
+        
+        //Checking that liking works
+        assertEquals(1.5, socialNet.checkCategories(0, 0), error);
+        
+        //checking that dislike works
+        assertEquals(0.5, socialNet.checkCategories(1, 0), error);
+        
+        //Checking border case neutral going above max categories
+        assertEquals(1.0, socialNet.checkCategories(2, 0), error);
+        
+        //Checking border case of dislike going below 0
+        assertEquals(0.5, socialNet.checkCategories(0, 2), error);
+    }
 }

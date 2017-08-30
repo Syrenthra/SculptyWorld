@@ -73,7 +73,12 @@ public class NPC extends Lifeform implements RoomObserver
      * The items that this NPC has a particular liking for.
      */
     protected ArrayList<Item> favoriteItems;
-
+    
+    /*
+     * New Favorite items implementation where NPCs have a category of items they like
+     */
+    protected int giftCategory;
+    
     /**
      * The items that this NPC likes to create quests around.
      */
@@ -119,12 +124,15 @@ public class NPC extends Lifeform implements RoomObserver
         m_damage = damage;
         m_armor = armor;
         m_speed = speed;
-
+        
+        giftCategory=-1;
+        
         double control = 0.0;
         double grumpiness = 0.5;
         double personability = 0.5;
         int desiredFriends = 0;
         int desiredCapital = 0;
+        
 
         m_socialNetwork = new SocialNetwork(this, control, grumpiness, personability, desiredFriends, desiredCapital);
 
@@ -1172,11 +1180,31 @@ public class NPC extends Lifeform implements RoomObserver
         }
     }
     
-    
-    public void setCurrentCapital(int capitol)
+    /**
+     * Sets the current Social Capital of the NPC
+     * @param capitol
+     */
+    public void setCurrentCapital(int capital)
     {
-    	m_socialNetwork.setCurrentCapital(capitol);
+    	m_socialNetwork.setCurrentCapital(capital);
     }
+
+    /**
+     *Returns the gift category the NPC belongs to
+     */
+	public int getCategory() 
+	{
+		return giftCategory;
+	}
+	
+	/**
+	 * Sets the gift category
+	 * @param category cat to be set to
+	 */
+	public void setCategory(int category)
+	{
+		giftCategory=category;
+	}
 
     
 }

@@ -212,6 +212,9 @@ public class TestNPC
 
         bob.removeFavoriteItem(item);
         assertFalse(bob.getFavoriteItems().contains(item));
+        
+        bob.setCategory(2);
+        assertEquals(2,bob.getCategory());
     }
 
     @Test
