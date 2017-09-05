@@ -317,14 +317,12 @@ public class SocialNetwork
      * @return the modifier value
      */
     public double checkCategories(int me, int target) 
-    {
-    	int catNum=GiftCategories.getCategoryNum();
+    {  	
 		/*Category modifier assignments can be changed
     	* Currently, same category will be liked, 1 higher will be neutral, 1 lower disliked
     	* where the numbers will be wrapped using modulus
     	*/
-    	
-    	
+    	int catNum=GiftCategories.getCategoryNum();
     	int like =me;
     	int neutral=(me+1)%catNum;
     	int dislike=(me-1)%catNum;

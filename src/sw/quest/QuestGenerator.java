@@ -31,7 +31,7 @@ import sw.socialNetwork.SocialNetworkDecayRates;
  * This class is a factory that creates SocialQuests as needed for SocialNPCs. It is a singleton.
  * All Social quests are setup as TimedQuests.
  * 
- * TODO: Hold Time and Comlete Time should be determined based on additional factors (see UML Quest document).
+ * TODO: Hold Time and Complete Time should be determined based on additional factors (see UML Quest document).
  * 
  * TODO: Make sure all Social Quests are Timed Quests.
  */
@@ -46,6 +46,11 @@ public class QuestGenerator
      * 3: homewreckerQuest
      */
     protected static int[] questNumbers = new int[4];
+    
+    /**
+     * Decay rate used by the Quest Generator
+     */
+    protected static SocialNetworkDecayRates rate=SocialNetworkDecayRates.NORMAL;
 
     /**
      * Just so no one tries to create an instance of one.
@@ -94,7 +99,7 @@ public class QuestGenerator
     {
         Item gift = pickItemForDeliveryTask(giver.getQuestItems());
 
-        return genGiftQuest(giver, target, gift, SocialNetworkDecayRates.NORMAL);
+        return genGiftQuest(giver, target, gift, rate);
     }
 
     /**
@@ -413,10 +418,31 @@ public class QuestGenerator
      */
     private static Item pickItemForDeliveryTask(ArrayList<Item> itemsForQuest)
     {
+    	
+    	//For new system, can just create an item with the Giver's gift category
         Random rand = new Random();
         int num = rand.nextInt(itemsForQuest.size());
         Item target = itemsForQuest.get(num);
 
         return target;
     }
+    
+    /**
+	 * Clears the reference to the QuestGenerator singleton. Used to make testing easier.
+	 */
+	public static void clear()
+	{
+		questNumbers = new int[4];
+	}
+
+	/**
+	 * Allows the setting of a specific decay rate, since the default is normal
+	 * @param newRate the new rate to be used for the creation of relations
+	 */
+	public void setDecayRate(SocialNetworkDecayRates newRate) 
+	{
+		rate=newRate;
+	}
+
+
 }

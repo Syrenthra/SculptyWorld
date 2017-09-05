@@ -25,6 +25,8 @@ import sw.quest.reward.HomewreckerReward;
 import sw.quest.reward.QuestReward;
 import sw.quest.reward.SocialReward;
 import sw.socialNetwork.*;
+import sw.socialNetwork.simulation.EventTypes;
+import sw.socialNetwork.simulation.SocialNetworkEvent;
 
 /**
  * @author David Abrams and Dr. Girard
@@ -78,6 +80,10 @@ public class NPC extends Lifeform implements RoomObserver
      * New Favorite items implementation where NPCs have a category of items they like
      */
     protected int giftCategory;
+    
+    //The SNPC holds everything it does during its turn and then sends all the events to the simulation
+  	protected ArrayList<SocialNetworkEvent> events;
+
     
     /**
      * The items that this NPC likes to create quests around.
@@ -1205,6 +1211,43 @@ public class NPC extends Lifeform implements RoomObserver
 	{
 		giftCategory=category;
 	}
+	
+	/**
+	 * Creates a new SocialNetworkEvent and adds it to the list.
+	 * 
+	 * @param target The other SocialNPC involved in this event.
+	 * @param type The type of event that occurred
+	 */
+	public void newEvent(NPC target, EventTypes type)
+	{
+		SocialNetworkEvent event = new SocialNetworkEvent(this, target, type);
+		addEvent(event);
+	}
+	
+	/**
+	 * Creates a new SocialNetworkEvent and adds it to the list.
+	 * 
+	 * @param target The other SocialNPC involved in this event.
+	 * @param type The type of event that occurred
+	 * @param info Special information that needs to be sent
+	 */
+	public void newEvent(NPC target, EventTypes type, int info)
+	{
+		SocialNetworkEvent event = new SocialNetworkEvent(this, target, type, info);
+		addEvent(event);
+	}
+	
+	private void addEvent(SocialNetworkEvent event)
+	{
+		events.add(event);
+	}
+	
+	public ArrayList<SocialNetworkEvent> getEvents()
+	{
+		return events;
+	}
+
+
 
     
 }

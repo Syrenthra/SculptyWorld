@@ -191,8 +191,8 @@ public class Simulation
 		
 		//make the quest generator for the SNPCs
 		System.out.println("	Create quest generator...");
-		QuestGenerator socialQuestGenerator = QuestGenerator.getInstance();
-		socialQuestGenerator.autoAddPlayer(thePlayer);
+		QuestGenerator socialQuestGenerator;// = QuestGenerator.getInstance();
+		//socialQuestGenerator.autoAddPlayer(thePlayer);
 		if(networkCohesion == 1)
 		{
 			socialQuestGenerator.setDecayRate(SocialNetworkDecayRates.HIGH);
@@ -296,7 +296,7 @@ public class Simulation
 				//first SNPC in each room is the broker
 				if (room.getNPCs().length == 1)
 				{
-					currentSNPC.setIsBrokerNode(true);
+					currentSNPC.getSocialNetwork().setIsBrokerNode(true);
 				}
 				
 				roomToPlace++;
@@ -366,7 +366,7 @@ public class Simulation
 					}else
 					{
 						quest.questFailed();
-						quest.turnInQuest(thePlayer);
+						//quest.turnInQuest(thePlayer);
 					}
 				}
 				processTurnEvents(current.getEvents());

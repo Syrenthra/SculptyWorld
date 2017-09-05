@@ -11,8 +11,10 @@ import sw.lifeform.PCEvent;
 import sw.lifeform.PCObserver;
 import sw.lifeform.PC;
 import sw.quest.reward.QuestReward;
+import sw.quest.reward.SocialReward;
 import sw.quest.task.QuestTask;
 import sw.quest.task.TaskType;
+import sw.socialNetwork.simulation.EventTypes;
 
 
 /**
@@ -347,7 +349,8 @@ public class Quest implements  PCObserver
                     quester.removeInheritedQuest(this);
                     quester.removeNativeQuest(this);
                 }
-                m_questState = QuestState.COMPLETED;
+                //m_questState = QuestState.COMPLETED;
+                questSuccessful();
                 while (m_players.size() > 0)
                 {
                     removePlayer(m_players.elementAt(0));
@@ -517,5 +520,35 @@ public class Quest implements  PCObserver
         m_questState = state;
         
     }
+    
+    /**
+	 * This method performs whatever actions occur immediately upon successful completion of the
+	 * SocialQuest.
+	 */
+	public void questSuccessful()
+	{
+		if(m_questState == QuestState.IN_PROGRESS)
+		{
+			setCurrentState(QuestState.COMPLETED);
+			getItemReward();
+			SocialReward reward= (SocialReward) m_rewards.get(0);
+			m_granter.newEvent(reward.getTarget(), EventTypes.QUEST_SUCCESSFUL);
+		}
+	}
+
+	/**
+	 * This method performs whatever actions occur immediately upon failure of the SocialQuest.
+	 */
+	public void questFailed()
+	{
+		if(m_questState == QuestState.IN_PROGRESS)
+		{
+			setCurrentState(QuestState.FAILED);
+			SocialReward reward= (SocialReward) m_rewards.get(0);
+			reward.failedQuest();
+			m_granter.newEvent(reward.getTarget(), EventTypes.QUEST_FAILED);
+		}
+	}
+
 
 }
