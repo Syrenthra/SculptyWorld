@@ -17,6 +17,7 @@ import sw.lifeform.PC;
 import sw.quest.Quest;
 import sw.socialNetwork.Personality;
 import sw.quest.QuestGenerator;
+import sw.quest.TimedQuest;
 import sw.socialNetwork.SocialNetworkDecayRates;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;

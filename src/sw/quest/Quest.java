@@ -305,7 +305,8 @@ public class Quest implements  PCObserver
     {
     	
         boolean canCompleteQuest = true;
-        if (this.getOverallCompletionPercent() == 100)
+        //Added in the OR part so that questSucessful can by pass tasks
+        if (this.getOverallCompletionPercent() == 100 || m_questState.equals(QuestState.COMPLETED))
         {
             
             if (hasRewardItem())
@@ -528,14 +529,12 @@ public class Quest implements  PCObserver
 	 */
 	public void questSuccessful()
 	{
+		m_questState=QuestState.COMPLETED;
 		
-		if(m_questState == QuestState.IN_PROGRESS)
-		{
-			setCurrentState(QuestState.COMPLETED);
-			getItemReward();
-			SocialReward reward= (SocialReward) m_rewards.get(0);
-			m_granter.newEvent(reward.getTarget(), EventTypes.QUEST_SUCCESSFUL);
-		}
+		turnInQuest(m_players.firstElement());
+		SocialReward reward= (SocialReward) m_rewards.get(0);
+		m_granter.newEvent(reward.getTarget(), EventTypes.QUEST_SUCCESSFUL);
+		
 	}
 
 	/**
@@ -543,14 +542,35 @@ public class Quest implements  PCObserver
 	 */
 	public void questFailed()
 	{
+		
+		m_questState = QuestState.FAILED;
+        ArrayList<NPC> targets=new ArrayList<NPC>();
+        for (QuestReward reward : m_rewards)
+        {
+        	//Adds all of the targets of the quest to a list, so that events can be created for each
+        	SocialReward rewardTarget= (SocialReward) reward;
+        	if(!targets.contains(rewardTarget.getTarget()))
+        	{
+        		targets.add(rewardTarget.getTarget());
+        	}
+        	reward.failedQuest();
+            
+        }
+        for(NPC target:targets)
+        {
+        	m_granter.newEvent(target, EventTypes.QUEST_FAILED);
+        }
+        while (m_players.size() > 0)
+            this.removePlayer(m_players.elementAt(0));
+        m_granter.removeQuest(this);
 
-		if(m_questState == QuestState.IN_PROGRESS)
+		/**if(m_questState == QuestState.IN_PROGRESS)
 		{
 			setCurrentState(QuestState.FAILED);
 			SocialReward reward= (SocialReward) m_rewards.get(0);
 			reward.failedQuest();
 			m_granter.newEvent(reward.getTarget(), EventTypes.QUEST_FAILED);
-		}
+		}*/
 	}
 
 

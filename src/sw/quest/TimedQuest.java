@@ -68,22 +68,22 @@ public class TimedQuest extends Quest implements TimeObserver
     {
     	//super.questFailed();
         m_questState = QuestState.FAILED;
-        //ArrayList<NPC> targets=new ArrayList<NPC>();
+        ArrayList<NPC> targets=new ArrayList<NPC>();
         for (QuestReward reward : m_rewards)
         {
         	//Adds all of the targets of the quest to a list, so that events can be created for each
-        	/**SocialReward rewardTarget= (SocialReward) reward;
+        	SocialReward rewardTarget= (SocialReward) reward;
         	if(!targets.contains(rewardTarget.getTarget()))
         	{
         		targets.add(rewardTarget.getTarget());
-        	}*/
+        	}
         	reward.failedQuest();
             
         }
-        /**for(NPC target:targets)
+        for(NPC target:targets)
         {
         	m_granter.newEvent(target, EventTypes.QUEST_FAILED);
-        }*/
+        }
         while (m_players.size() > 0)
             this.removePlayer(m_players.elementAt(0));
         m_granter.removeQuest(this);
