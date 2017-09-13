@@ -652,6 +652,20 @@ public class NPC extends Lifeform implements RoomObserver
                 }
             }
         }
+        
+        if (events.size() > 0)
+		{
+			ArrayList<SocialNetworkEvent> eventsToBeRemoved = new ArrayList<SocialNetworkEvent>();
+			for (SocialNetworkEvent current : events)
+			{
+				if (current.getRead())
+				{
+					eventsToBeRemoved.add(current);
+				}
+			}
+			events.removeAll(eventsToBeRemoved);
+		}
+
 
         /**
          * Logic flow for social actions...
