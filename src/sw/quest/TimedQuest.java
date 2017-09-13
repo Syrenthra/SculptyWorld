@@ -1,8 +1,12 @@
 package sw.quest;
 
+import java.util.ArrayList;
+
 import sw.lifeform.NPC;
 import sw.lifeform.PC;
 import sw.quest.reward.QuestReward;
+import sw.quest.reward.SocialReward;
+import sw.socialNetwork.simulation.EventTypes;
 import sw.time.TimeObserver;
 
 /**
@@ -62,14 +66,51 @@ public class TimedQuest extends Quest implements TimeObserver
      */
     public void questFailed()
     {
+    	//super.questFailed();
         m_questState = QuestState.FAILED;
+        //ArrayList<NPC> targets=new ArrayList<NPC>();
         for (QuestReward reward : m_rewards)
         {
-            reward.failedQuest();
+        	//Adds all of the targets of the quest to a list, so that events can be created for each
+        	/**SocialReward rewardTarget= (SocialReward) reward;
+        	if(!targets.contains(rewardTarget.getTarget()))
+        	{
+        		targets.add(rewardTarget.getTarget());
+        	}*/
+        	reward.failedQuest();
+            
         }
+        /**for(NPC target:targets)
+        {
+        	m_granter.newEvent(target, EventTypes.QUEST_FAILED);
+        }*/
         while (m_players.size() > 0)
             this.removePlayer(m_players.elementAt(0));
         m_granter.removeQuest(this);
+    }
+    
+    /**
+     * This method performs whatever actions occur immediately upon failure of the TimedQuest.
+     */
+    public void questSucessful(PC player)
+    {
+//        m_questState = QuestState.COMPLETED;
+//        ArrayList<NPC> targets=new ArrayList<NPC>();
+//        for (QuestReward reward : m_rewards)
+//        {
+//        	//Adds all of the targets of the quest to a list, so that events can be created for each
+//        	SocialReward rewardTarget= (SocialReward) reward;
+//        	if(!targets.contains(rewardTarget.getTarget()))
+//        	{
+//        		targets.add(rewardTarget.getTarget());
+//        	}
+        	//super.questSuccessful(player);;
+//            
+//        }
+//        for(NPC target:targets)
+//        {
+//        	m_granter.newEvent(target, EventTypes.QUEST_SUCCESSFUL);
+//        }
     }
 
     /**

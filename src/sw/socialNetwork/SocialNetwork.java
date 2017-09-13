@@ -10,6 +10,7 @@ import java.util.Hashtable;
 import sw.lifeform.NPC;
 import sw.quest.QuestState;
 import sw.quest.SocialCapitolCost;
+import sw.socialNetwork.simulation.EventTypes;
 
 public class SocialNetwork
 {
@@ -318,6 +319,11 @@ public class SocialNetwork
      */
     public double checkCategories(int me, int target) 
     {  	
+    	//If the target has a -1, their category was not set, treated as neutral
+    	if(target==-1)
+    	{
+    		return 1.0;
+    	}
 		/*Category modifier assignments can be changed
     	* Currently, same category will be liked, 1 higher will be neutral, 1 lower disliked
     	* where the numbers will be wrapped using modulus
@@ -344,11 +350,7 @@ public class SocialNetwork
     	{
     		return 0.5;
     	}
-    	//If the target has a -1, their category was not set, treated as neutral
-    	if(target==-1)
-    	{
-    		return 1.0;
-    	}
+    	
     	return 1.0;
 	}
 
@@ -705,7 +707,6 @@ public class SocialNetwork
      * --create gift quest
      * --add quest to list of available quests
      * --quest is accepted by a player
-     * --player must be successful in order for the friendship to be created
      * 
      * 
      * This is called when I do not have as many friends as I want. In order to reach my desired
@@ -796,6 +797,7 @@ public class SocialNetwork
     {
         frResponseList.put(target, request);
         frResponseListOrder.add(target);
+
     }
 
     /**
@@ -888,6 +890,8 @@ public class SocialNetwork
         frReqListOrder.add(target);
 
         target.receiveFriendRequest(m_myNPC,req);
+        m_myNPC.newEvent(target, EventTypes.FRIEND_REQUEST_SENT);
+        target.newEvent(m_myNPC, EventTypes.FRIEND_REQUEST_RECIEVED);
     }
 
     /**
@@ -979,6 +983,7 @@ public class SocialNetwork
             sum += relationshipSocialWorth * getControl();
         }
         currentCapital += sum;
+        m_myNPC.newEvent(null,EventTypes.CAPITAL_CHANGED, sum);
     }
 
     /**
@@ -997,6 +1002,7 @@ public class SocialNetwork
             if (num <= 1 - getGrumpiness())
             {
                 currentMood = Moods.HAPPY;
+                m_myNPC.newEvent(null, EventTypes.MOOD_CHANGE_TO_HAPPY);
             }
         }
         else if (result == QuestState.FAILED && currentMood == Moods.HAPPY)
@@ -1004,6 +1010,7 @@ public class SocialNetwork
             if (num <= getGrumpiness())
             {
                 currentMood = Moods.ANGRY;
+                m_myNPC.newEvent(null, EventTypes.MOOD_CHANGE_TO_ANGRY);
             }
         }
     }

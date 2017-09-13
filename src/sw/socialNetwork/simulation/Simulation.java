@@ -172,6 +172,7 @@ public class Simulation
 			world.addRoom(east);
 			world.addRoom(west);
 			
+			
 			System.out.println("	Connecting rooms...");
 			
 			mainRoom.addExit(north, Exit.NORTH);
@@ -186,29 +187,31 @@ public class Simulation
 			rooms.add(north);
 			rooms.add(south);
 			rooms.add(east);
-			rooms.add(west);		
+			rooms.add(west);	
+			world.constructZoneGraph();
 		}
 		
 		//make the quest generator for the SNPCs
 		System.out.println("	Create quest generator...");
-		QuestGenerator socialQuestGenerator;// = QuestGenerator.getInstance();
-		//socialQuestGenerator.autoAddPlayer(thePlayer);
+		//QuestGenerator socialQuestGenerator = null;// = QuestGenerator.getInstance();
+		//QuestGenerator.autoAddPlayer(thePlayer);
 		if(networkCohesion == 1)
 		{
-			socialQuestGenerator.setDecayRate(SocialNetworkDecayRates.HIGH);
+			QuestGenerator.setDecayRate(SocialNetworkDecayRates.HIGH);
 		}else if(networkCohesion == 2)
 		{
-			socialQuestGenerator.setDecayRate(SocialNetworkDecayRates.NORMAL);
+			QuestGenerator.setDecayRate(SocialNetworkDecayRates.NORMAL);
 		}else if(networkCohesion == 3)
 		{
-			socialQuestGenerator.setDecayRate(SocialNetworkDecayRates.LOW);
+			QuestGenerator.setDecayRate(SocialNetworkDecayRates.LOW);
 		}
 		
-		//quest generator should listen to all the rooms
+		/*//quest generator should listen to all the rooms
 		for(Room cur : rooms)
 		{
 			cur.addRoomObserver(socialQuestGenerator);
 		}
+		*/
 		
 		//make some items
 		System.out.println("	Creating items...");
@@ -218,9 +221,9 @@ public class Simulation
 		
 		//put the items in the main room
 		System.out.println("	Adding items to room...");
-		mainRoom.addItem(bo);
-		mainRoom.addItem(shortSword);
-		mainRoom.addItem(mace);
+		//mainRoom.addItem(bo);
+		//mainRoom.addItem(shortSword);
+		//mainRoom.addItem(mace);
 		
 		//initialize several NPCs
 		System.out.println("	Creating SocialNPCs (" + population + ")...");
@@ -275,6 +278,8 @@ public class Simulation
 			
 			//System.out.println("		Creating SNPC (" + name + ")");
 			currentSNPC = new NPC(id, name, desc, life, damage, armor, speed, pers);
+			
+			currentSNPC.addQuestItem(mace);
 
 			currentSNPC.setCurrentCapital(startingCapital);
 			id++;
@@ -307,6 +312,7 @@ public class Simulation
 				mainRoom.addRoomObserver(currentSNPC);
 				mainRoom.addNPC(currentSNPC);
 			}
+			world.constructZoneGraph();
 		}
 		
 		System.out.println("	Setting up output file...");
@@ -355,6 +361,7 @@ public class Simulation
 				while(current.getAvailableQuests().size() > j)
 				{
 					Quest quest = current.getAvailableQuests().get(j);
+					quest.addPlayer(thePlayer);
 					/**
 					 * The current SNPCs quests have a chance of being completed based on
 					 * the global quest completion rate.
@@ -362,7 +369,8 @@ public class Simulation
 					num = rand.nextDouble();
 					if(num <= questSuccessRate)
 					{
-						quest.turnInQuest(thePlayer);
+						//quest.turnInQuest(thePlayer);
+						quest.questSuccessful();
 					}else
 					{
 						quest.questFailed();

@@ -8,6 +8,7 @@ import sw.quest.SocialCapitolCost;
 import sw.socialNetwork.Feelings;
 import sw.socialNetwork.SocialNetwork;
 import sw.socialNetwork.SocialNetworkDecayRates;
+import sw.socialNetwork.simulation.EventTypes;
 
 /**
  * @author David Abrams and Dr. Girard
@@ -81,6 +82,7 @@ public class GiftReward extends SocialReward
 
         if (!(targetNetwork.hasFriend(questGiver) && questGiverNetwork.hasFriend(m_target)))
         {
+        	m_quest.getGranter().newEvent(m_target, EventTypes.FRIENDSHIP_CREATED);
             //part of the friendship doesn't exist
             if (targetNetwork.hasFriend(questGiver) && !questGiverNetwork.hasFriend(m_target))
             {
@@ -104,6 +106,7 @@ public class GiftReward extends SocialReward
 
                 questGiverNetwork.addFriend(m_target, giverFeels);
                 targetNetwork.addFriend(questGiver, targetFeels);
+                
             }
         }
         else if (targetNetwork.hasFriend(questGiver) && questGiverNetwork.hasFriend(m_target))

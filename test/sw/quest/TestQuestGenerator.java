@@ -44,6 +44,7 @@ public class TestQuestGenerator
 	@Test
 	public void testGenGiftQuest()
 	{
+		QuestGenerator.clear();
 		NPC questGiver = new NPC(0, "Giver", "gives quests", 1, 1, 1, 1);
 		NPC questTarget = new NPC(1, "Target", "target of quests", 1, 1, 1, 1);
 		MockItem gift1 = new MockItem("Item1","Desc1",3,3);
@@ -112,9 +113,11 @@ public class TestQuestGenerator
 	 * This test makes sure that QuestGenerator can properly create a FavorQuest both when the
 	 * objective is specified and when QuestGenerator must randomly select it.
 	 */
+	//Can be ignored as only item delivery is actually implemented
 	@Test
 	public void testGenFavorQuest()
 	{
+		QuestGenerator.clear();
 		NPC questGiver = new NPC(0, "Giver", "gives quests", 1, 1, 1, 1);
 		SocialNetwork giverNetwork = questGiver.getSocialNetwork();
 		NPC questTarget = new NPC(1, "Target", "target of quests", 1, 1, 1, 1);
@@ -193,6 +196,7 @@ public class TestQuestGenerator
 	@Test
 	public void testGenReqFavQuest()
 	{
+		QuestGenerator.clear();
 		NPC questGiver = new NPC(0, "Giver", "gives quests", 1, 1, 1, 1);
 		NPC questTarget = new NPC(1, "Target", "target of quests", 1, 1, 1, 1);
 		MockItem objective = new MockItem("Item1","Desc1",1,1);
@@ -267,6 +271,7 @@ public class TestQuestGenerator
 	@Test
 	public void testGenHomewreckerQuest()
 	{
+		QuestGenerator.clear();
 		NPC questGiver = new NPC(0, "Giver", "gives quests", 1, 1, 1, 1);
 		NPC questTarget1 = new NPC(0, "Target1", "target of quests", 1, 1, 1, 1);
 		NPC questTarget2 = new NPC(0, "Target2", "target of quests", 1, 1, 1, 1);
@@ -319,6 +324,7 @@ public class TestQuestGenerator
     @Test
     public void testMakehomewreckerQuest()
     {
+    	QuestGenerator.clear();
         NPC bob = new NPC(0, "Bob", "He wears overalls.", 50, 5, 10, 1);
         SocialNetwork bobNetwork = bob.getSocialNetwork();
         NPC bill = new NPC(0, "Bill", "He wears gloves.", 50, 5, 10, 1);
@@ -390,6 +396,7 @@ public class TestQuestGenerator
 	@Test
 	public void testDecideDifficulty()
 	{
+		QuestGenerator.clear();
 	    NPC giver = new NPC(0, "Giver", "gives quests", 1, 1, 1, 1);
 		SocialCapitolCost diff;
 		giver.getSocialNetwork().setCurrentCapital(2500);

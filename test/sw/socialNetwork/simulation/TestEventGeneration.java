@@ -6,23 +6,22 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import sw.environment.SWRoomUpdateType;
 import sw.item.Item;
 import sw.lifeform.NPC;
-import sw.lifeform.SocialNPC;
-import sw.quest.FavorQuest;
-import sw.quest.GiftQuest;
+import sw.lifeform.PC;
 import sw.quest.Quest;
-import sw.quest.RequestFavorQuest;
-import sw.quest.SocialCapitolCost;
-import sw.quest.SocialQuest;
-import sw.quest.SocialQuestDifficulty;
 import sw.socialNetwork.Feelings;
 import sw.socialNetwork.FriendRequest;
 import sw.socialNetwork.Moods;
-import sw.socialNetwork.QuestGenerator;
+import sw.quest.QuestGenerator;
+import sw.quest.QuestState;
+import sw.quest.SocialCapitolCost;
+import sw.quest.TimedQuest;
+import sw.quest.reward.FavorReward;
+import sw.quest.reward.RequestFavorReward;
+import sw.quest.reward.SocialReward;
 import sw.socialNetwork.SocialNetworkDecayRates;
-import sw.socialNetwork.SocialQuestState;
+
 
 /**
  * @author David Abrams
@@ -42,9 +41,9 @@ public class TestEventGeneration
 		MockSocialNPC bob = new MockSocialNPC();
 		MockSocialNPC bill = new MockSocialNPC();
 		
-		bob.sendFriendRequest(bill);
+		bob.getSocialNetwork().sendFriendRequest(bill);
 		
-		FriendRequest bobToBill = bill.getFrResponseList().get(bob);
+		FriendRequest bobToBill = bill.getSocialNetwork().getFrResponseList().get(bob);
 		ArrayList<SocialNetworkEvent> bobsEvents = bob.getEvents();
 		ArrayList<SocialNetworkEvent> billsEvents = bill.getEvents();
 		
@@ -53,15 +52,15 @@ public class TestEventGeneration
 		assertEquals(EventTypes.FRIEND_REQUEST_SENT, bobsEvents.get(0).getType());
 		assertEquals(EventTypes.FRIEND_REQUEST_RECIEVED, billsEvents.get(0).getType());
 		
-		bill.acceptFriendRequest(bobToBill);
+		bill.getSocialNetwork().acceptFriendRequest(bobToBill);
 		
 		billsEvents = bill.getEvents();
 		assertEquals(2, billsEvents.size());
 		assertEquals(EventTypes.FRIEND_REQUEST_ACCEPTED, billsEvents.get(1).getType());
 		
-		bill.sendFriendRequest(bob);
-		FriendRequest billToBob = bob.getFrResponseList().get(bill);
-		bob.rejectFriendRequest(billToBob);
+		bill.getSocialNetwork().sendFriendRequest(bob);
+		FriendRequest billToBob = bob.getSocialNetwork().getFrResponseList().get(bill);
+		bob.getSocialNetwork().rejectFriendRequest(billToBob);
 		bobsEvents = bob.getEvents();
 		
 		assertEquals(3, bobsEvents.size());
@@ -81,11 +80,12 @@ public class TestEventGeneration
 		MockSocialNPC bill = new MockSocialNPC();
 		MockItem gift = new MockItem();
 		bob.setCurrentCapital(500);
-		bob.setTotalDesiredFriends(1);
-		bob.getQuestGenerator().roomUpdate(null, gift, SWRoomUpdateType.ITEM_ADDED);
+		bob.getSocialNetwork().setTotalDesiredFriends(1);
+		bob.addQuestItem(gift);
+		//QuestGenerator.roomUpdate(null, gift, SWRoomUpdateType.ITEM_ADDED);
 		
-		bob.sendFriendRequest(bill);
-		bill.acceptFriendRequest(bob.getFrReqList().get(bill));
+		bob.getSocialNetwork().sendFriendRequest(bill);
+		bill.getSocialNetwork().acceptFriendRequest(bob.getSocialNetwork().getFrReqList().get(bill));
 		
 		bob.updateTime("", 0);
 		
@@ -107,15 +107,15 @@ public class TestEventGeneration
 		MockSocialNPC bob = new MockSocialNPC();
 		MockSocialNPC bill = new MockSocialNPC();
 		MockSocialNPC jane = new MockSocialNPC();
-		bob.setGrumpiness(1.0);
-		bob.setCurrentMood(Moods.ANGRY);
-		bill.setCurrentMood(Moods.ANGRY);
+		bob.getSocialNetwork().setGrumpiness(1.0);
+		bob.getSocialNetwork().setCurrentMood(Moods.ANGRY);
+		bill.getSocialNetwork().setCurrentMood(Moods.ANGRY);
 		bob.setCurrentCapital(500);
 		
-		bob.addFriend(bill);
-		bill.addFriend(bob);
-		bill.addFriend(jane);
-		jane.addFriend(bill);
+		bob.getSocialNetwork().addFriend(bill);
+		bill.getSocialNetwork().addFriend(bob);
+		bill.getSocialNetwork().addFriend(jane);
+		jane.getSocialNetwork().addFriend(bill);
 		
 		bob.updateTime("", 0);
 		
@@ -137,21 +137,22 @@ public class TestEventGeneration
 		MockSocialNPC bob = new MockSocialNPC();
 		MockSocialNPC bill = new MockSocialNPC();
 	
-		bob.getQuestGenerator().roomUpdate(null, new MockItem(), SWRoomUpdateType.ITEM_ADDED);
-		
-		bob.setTotalDesiredFriends(1);
-		bob.setTotalDesiredCapital(5000);
-		bob.setCurrentCapital(1000);
-		bob.addFriend(bill);
-		bill.addFriend(bob);
+		//bob.getQuestGenerator().roomUpdate(null, new MockItem(), SWRoomUpdateType.ITEM_ADDED);
+		bob.addQuestItem(new MockItem());
+		bob.getSocialNetwork().setTotalDesiredFriends(1);
+		bob.getSocialNetwork().setTotalDesiredCapital(5000);
+		bob.getSocialNetwork().setCurrentCapital(1000);
+		bob.getSocialNetwork().addFriend(bill);
+		bill.getSocialNetwork().addFriend(bob);
 		
 		//Generate event when a 
-		bob.getRelationships().get(bill).setIntimacy(12); //3 turns until termination
+		bob.getSocialNetwork().getRelationships().get(bill).setIntimacy(12); //3 turns until termination
 		
 		bob.updateTime("", 0);
 		
 		assertEquals(1, bob.getAvailableQuests().size());
-		assertTrue(bob.getAvailableQuests().get(0) instanceof FavorQuest);
+		//assertTrue(bob.getAvailableQuests().get(0) instanceof FavorQuest);
+		assertTrue(bob.getAvailableQuests().get(0).getRewards().get(0) instanceof FavorReward);
 		assertEquals(2, bob.getEvents().size());
 		//first event is change of social capital
 		assertEquals(EventTypes.QUEST_CREATED_FAVORQUEST, bob.getEvents().get(1).getType());
@@ -168,13 +169,13 @@ public class TestEventGeneration
 	{
 		MockSocialNPC bob = new MockSocialNPC();
 		MockSocialNPC bill = new MockSocialNPC();
-		bob.getQuestGenerator().roomUpdate(null, new MockItem(), SWRoomUpdateType.ITEM_ADDED);
-		
-		bob.addFriend(bill);
-		bill.addFriend(bob);
+		//bob.getQuestGenerator().roomUpdate(null, new MockItem(), SWRoomUpdateType.ITEM_ADDED);
+		bob.addQuestItem(new MockItem());
+		bob.getSocialNetwork().addFriend(bill);
+		bill.getSocialNetwork().addFriend(bob);
 		
 		//set up the relationship so Bob owes Bill a social debt & will do a favor when asked
-		Feelings bobForBill = bob.getRelationships().get(bill);
+		Feelings bobForBill = bob.getSocialNetwork().getRelationships().get(bill);
 		bobForBill.setSocialDebtOwed(1000);
 		bobForBill.setIntimacy(50);
 		bill.askFavor(bob);
@@ -183,7 +184,7 @@ public class TestEventGeneration
 		bob.updateTime("", 0);
 		
 		assertEquals(1, bob.getAvailableQuests().size());
-		assertTrue(bob.getAvailableQuests().get(0) instanceof RequestFavorQuest);
+		assertTrue(bob.getAvailableQuests().get(0).getRewards().get(0) instanceof RequestFavorReward);
 		assertEquals(2, bob.getEvents().size());
 		//first event is change of social capital
 		assertEquals(EventTypes.QUEST_CREATED_REQFAVQUEST, bob.getEvents().get(1).getType());
@@ -202,6 +203,15 @@ public class TestEventGeneration
 		MockSocialNPC bill = new MockSocialNPC();
 		MockSocialQuest quest1 = new MockSocialQuest(bob, bill);
 		MockSocialQuest quest2 = new MockSocialQuest(bob, bill);
+		PC thePlayer = new PC(0, "Playerrr", "The player.", 50);
+		
+		FavorReward reward1 = new FavorReward(quest1, bill, SocialCapitolCost.CHEAP);
+		FavorReward reward2 = new FavorReward(quest2, bill, SocialCapitolCost.CHEAP);
+		
+		quest1.addPlayer(thePlayer);
+		quest2.addPlayer(thePlayer);
+		quest1.addReward(reward1);
+		quest2.addReward(reward2);
 		
 		quest1.questSuccessful();
 		quest2.questFailed();
@@ -224,14 +234,18 @@ public class TestEventGeneration
 	{
 		MockSocialNPC bob = new MockSocialNPC();
 		MockSocialNPC bill = new MockSocialNPC();
+		PC thePlayer = new PC(0, "Playerrr", "The player.", 50);
 		MockItem gift = new MockItem();
-		MockGiftQuest quest = new MockGiftQuest(bob, bill, gift);
-		
+		//MockGiftQuest quest = new MockQuest(bob, bill, gift);
+		bob.addQuestItem(gift);
+		bob.setCurrentCapital(500);
+		TimedQuest quest = QuestGenerator.genGiftQuest(bob, bill);
+		quest.addPlayer(thePlayer);
 		quest.questSuccessful();
-		
-		assertTrue(bob.getFriends().contains(bill));
-		assertTrue(bill.getFriends().contains(bob));
-		assertEquals(2, bob.getEvents().size());
+		//quest.getItemReward();
+		assertTrue(bob.getSocialNetwork().getFriends().contains(bill));
+		assertTrue(bill.getSocialNetwork().getFriends().contains(bob));
+		assertEquals(3, bob.getEvents().size());
 		assertEquals(EventTypes.FRIENDSHIP_CREATED, bob.getEvents().get(1).getType());
 		
 		QuestGenerator.clear();
@@ -248,19 +262,19 @@ public class TestEventGeneration
 		MockSocialNPC bill = new MockSocialNPC();
 		MockSocialNPC jane = new MockSocialNPC();
 		
-		bob.addFriend(bill);
-		bill.addFriend(bob);
-		bob.addFriend(jane);
-		jane.addFriend(bob);
+		bob.getSocialNetwork().addFriend(bill);
+		bill.getSocialNetwork().addFriend(bob);
+		bob.getSocialNetwork().addFriend(jane);
+		jane.getSocialNetwork().addFriend(bob);
 		
 		//set up the relationships so Bob will terminate his friendship with Jane
-		bob.getRelationships().get(jane).setIntimacy(1);
+		bob.getSocialNetwork().getRelationships().get(jane).setIntimacy(1);
 		
 		bob.updateTime("", 0);
 		
-		assertFalse(bob.getFriends().contains(jane));
+		assertFalse(bob.getSocialNetwork().getFriends().contains(jane));
 		assertEquals(2, bob.getEvents().size());
-		//first event is change of social capital
+		//capital change and then termination
 		assertEquals(EventTypes.FRIENDSHIP_TERMINATED, bob.getEvents().get(1).getType());
 		
 		QuestGenerator.clear();
@@ -276,26 +290,26 @@ public class TestEventGeneration
 		MockSocialNPC bill = new MockSocialNPC();
 		MockSocialNPC jane = new MockSocialNPC();
 		
-		bill.setCurrentMood(Moods.ANGRY);
-		jane.setCurrentMood(Moods.ANGRY);
+		bill.getSocialNetwork().setCurrentMood(Moods.ANGRY);
+		jane.getSocialNetwork().setCurrentMood(Moods.ANGRY);
 		
 		assertEquals(Moods.HAPPY, bob.getCurrentMood());
-		bob.setGrumpiness(1.0);
-		bob.setLastQuestResult(SocialQuestState.FAILURE);
-		bob.changeMoodQuest();
+		bob.getSocialNetwork().setGrumpiness(1.0);
+		bob.setLastQuestResult(QuestState.FAILED);
+		bob.getSocialNetwork().updateMood(bob.getLastQuestResult());
 		assertEquals(Moods.ANGRY, bob.getCurrentMood());
 		assertEquals(1, bob.getEvents().size());
 		assertEquals(EventTypes.MOOD_CHANGE_TO_ANGRY, bob.getEvents().get(0).getType());
 		
-		bob.setGrumpiness(0.0);
-		bob.setLastQuestResult(SocialQuestState.SUCCESS);
-		bob.changeMoodQuest();
+		bob.getSocialNetwork().setGrumpiness(0.0);
+		bob.setLastQuestResult(QuestState.COMPLETED);
+		bob.getSocialNetwork().updateMood(bob.getLastQuestResult());
 		assertEquals(Moods.HAPPY, bob.getCurrentMood());
 		assertEquals(2, bob.getEvents().size());
 		assertEquals(EventTypes.MOOD_CHANGE_TO_HAPPY, bob.getEvents().get(1).getType());
 		
-		bob.setGrumpiness(1.0);
-		bob.changeMoodPropagation();
+		bob.getSocialNetwork().setGrumpiness(1.0);
+		bob.getSocialNetwork().changeMoodPropagation();
 	}
 	
 }
@@ -327,12 +341,22 @@ class MockSocialQuest extends Quest
 	}
 }
 
-class MockGiftQuest extends GiftQuest
+class MockTimedQuest extends TimedQuest
 {
 
-	public MockGiftQuest(SocialNPC giver, SocialNPC target, Item item) {
-		super("Gift of the Mocking", giver, target, item, SocialQuestDifficulty.EASY, SocialNetworkDecayRates.NORMAL);
+	public MockTimedQuest(String name, String desc, NPC questGiver) {
+		super(name, desc, questGiver);
 		// TODO Auto-generated constructor stub
 	}
 	
 }
+
+//class MockGiftQuest extends Quest
+//{
+//
+//	public MockGiftQuest (NPC giver, NPC target, Item item) {
+//		super("Gift of the Mocking", giver, target, item, SocialCapitolCost.CHEAP, SocialNetworkDecayRates.NORMAL);
+//		// TODO Auto-generated constructor stub
+//	}
+//	
+//}

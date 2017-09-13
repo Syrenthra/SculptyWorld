@@ -1,5 +1,6 @@
 package sw.quest;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -286,7 +287,7 @@ public class Quest implements  PCObserver
      /**
      * Allows a player to turn in the quest.
      * 
-     * * Any items earned based on the level of completetion of the quest are handed to the player that
+     * * Any items earned based on the level of completion of the quest are handed to the player that
      * turns in the quest.  It is up to this player to hand out the items to the other questers.
      * 
      * The XP for the quest is handed out to all players that have at least part of the quest completed.
@@ -302,7 +303,7 @@ public class Quest implements  PCObserver
      */
     public boolean turnInQuest(PC player)
     {
-    	//We do't have a direct way to fail a quest, while there is a failure in QuestReward
+    	
         boolean canCompleteQuest = true;
         if (this.getOverallCompletionPercent() == 100)
         {
@@ -350,7 +351,7 @@ public class Quest implements  PCObserver
                     quester.removeNativeQuest(this);
                 }
                 //m_questState = QuestState.COMPLETED;
-                questSuccessful();
+                //questSuccessful();
                 while (m_players.size() > 0)
                 {
                     removePlayer(m_players.elementAt(0));
@@ -527,6 +528,7 @@ public class Quest implements  PCObserver
 	 */
 	public void questSuccessful()
 	{
+		
 		if(m_questState == QuestState.IN_PROGRESS)
 		{
 			setCurrentState(QuestState.COMPLETED);
@@ -541,6 +543,7 @@ public class Quest implements  PCObserver
 	 */
 	public void questFailed()
 	{
+
 		if(m_questState == QuestState.IN_PROGRESS)
 		{
 			setCurrentState(QuestState.FAILED);

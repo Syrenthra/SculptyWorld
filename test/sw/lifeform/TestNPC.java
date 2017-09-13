@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import sw.environment.Exit;
 import sw.environment.Room;
+import sw.environment.TheWorld;
 import sw.environment.Zone;
 import sw.item.HandLocation;
 import sw.item.Item;
@@ -325,9 +326,17 @@ public class TestNPC
         SocialNetwork johnSocialNetwork = john.getSocialNetwork();
 
         MockRoom room = new MockRoom(0, "Room", "Desc");
+        room.setZone(Zone.CITY);
+        TheWorld world = TheWorld.getInstance();
+        world.addRoom(room);
+        world.addNPC(bob);
+        world.addNPC(bill);
+        world.addNPC(john);
         room.addNPC(bob);
         room.addNPC(bill);
         room.addNPC(john);
+        
+        world.constructZoneGraph();
 
         // Setup the initial Social Network
         bobSocialNet.setTotalDesiredFriends(2);
@@ -429,6 +438,19 @@ public class TestNPC
         room.addNPC(jane);
         room.addNPC(jimmy);
         room.addNPC(mike);
+        
+        TheWorld world= TheWorld.getInstance();
+        
+        room.setZone(Zone.BEACH);
+        
+        world.addRoom(room);
+        world.addNPC(bob);
+        world.addNPC(bill);
+        world.addNPC(john);
+        world.addNPC(jane);
+        world.addNPC(jimmy);
+        world.addNPC(mike);
+        world.constructZoneGraph();
 
         bobNetwork.addFriend(bill, bobForBill);
         bobNetwork.addFriend(john, bobForJohn);
@@ -1171,7 +1193,19 @@ public class TestNPC
         room5.addExit(room6,Exit.EAST);
         
         room6.addExit(room5, Exit.WEST);
+        
+        TheWorld world= TheWorld.getInstance();
+        
+        world.addRoom(room3);
+        world.addRoom(room4);
+        world.addRoom(room5);
+        world.addRoom(room6);
+        world.addNPC(jane);
+        world.addNPC(sandy);
+        world.addNPC(bill);
+        world.addNPC(bob);
 
+        world.constructZoneGraph();
         Hashtable<NPC, FriendRequest> sentRequests = bobNetwork.getFrReqList();
 
         room3.addNPC(bob);
@@ -1443,9 +1477,27 @@ public class TestNPC
         NPC tim = new NPC(5, "tim", "He wears rainbow socks.", 50, 5, 10, 1);
         MockRoom daRoom = new MockRoom(0, "Da", "Desc");
         MockRoom otherRoom = new MockRoom(1, "Other", "Desc");
+        TheWorld world= TheWorld.getInstance();
+        
+        daRoom.setZone(Zone.CITY);
+        otherRoom.setZone(Zone.CITY);
+        
+        world.addRoom(daRoom);
+        world.addRoom(otherRoom);
+        world.constructZoneGraph();
+        
+        
+        world.addNPC(tim);
+        world.addNPC(john);
+        world.addNPC(mike);
+        world.addNPC(fred);
+        world.addNPC(sandy);
+        world.addNPC(jill);
+        world.addNPC(bob);
 
         //this line should prompt the console to spit out an error
         bob.pickNewFriendshipTarget();
+        daRoom.addRoomObserver(bob);
 
         daRoom.addNPC(bob);
         //Bob is in a room now, but he's alone. The method should return null.

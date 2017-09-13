@@ -164,8 +164,12 @@ public class NPC extends Lifeform implements RoomObserver
         m_damage = damage;
         m_armor = armor;
         m_speed = speed;
+        
+        giftCategory=-1;
 
         m_socialNetwork = new SocialNetwork(this, personality);
+        
+        init();
 
     }
 
@@ -181,6 +185,8 @@ public class NPC extends Lifeform implements RoomObserver
         m_questItems = new ArrayList<Item>();
         m_personalItems = new ArrayList<Item>();
         m_acceptablePersonalItems = new Hashtable<Integer, ArrayList<Item>>();
+        
+        events = new ArrayList<SocialNetworkEvent>();
     }
 
     /**
@@ -638,6 +644,7 @@ public class NPC extends Lifeform implements RoomObserver
                 {
                     removeFriend(currentSNPC);
                     currentSNPC.removeFriend(this);
+                    newEvent(currentSNPC, EventTypes.FRIENDSHIP_TERMINATED);
                 }
                 else
                 {
@@ -1060,7 +1067,6 @@ public class NPC extends Lifeform implements RoomObserver
     public void addQuestItem(Item item)
     {
         m_questItems.add(item);
-
     }
 
     /**

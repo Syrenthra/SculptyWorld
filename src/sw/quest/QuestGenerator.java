@@ -23,6 +23,7 @@ import sw.socialNetwork.Feelings;
 import sw.socialNetwork.FeelingsAttributes;
 import sw.socialNetwork.SocialNetwork;
 import sw.socialNetwork.SocialNetworkDecayRates;
+import sw.socialNetwork.simulation.EventTypes;
 
 /**
  * 
@@ -84,6 +85,7 @@ public class QuestGenerator
 
         DeliverItemTask task = new DeliverItemTask(quest, target, gift, 1);
         quest.addTask(task);
+        giver.newEvent(target, EventTypes.QUEST_CREATED_GIFTQUEST, cost.getCost());
 
         return quest;
     }
@@ -122,6 +124,7 @@ public class QuestGenerator
         TimedQuest quest = new TimedQuest(name, "Favor Quest Description.", giver);
         FavorReward reward = new FavorReward(quest, target, cost);
         quest.addReward(reward);
+        giver.newEvent(target, EventTypes.QUEST_CREATED_FAVORQUEST, cost.getCost());
 
         if (type == TaskType.CREATURE_TASK)
         {
@@ -277,7 +280,9 @@ public class QuestGenerator
             DeliverItemTask favorTask = new DeliverItemTask(quest, target, gift, 1);
             quest.addTask(favorTask);
         }
-
+        
+        giver.newEvent(target, EventTypes.QUEST_CREATED_REQFAVQUEST, cost.getCost());
+        
         return quest;
     }
 
@@ -361,6 +366,7 @@ public class QuestGenerator
                 quest = new TimedQuest(name, "Homewreker Quest Description.", questGiver);
                 HomewreckerReward reward = new HomewreckerReward(quest, target, targetRelationship, cost, attribute);
                 quest.addReward(reward);
+                questGiver.newEvent(target, EventTypes.QUEST_CREATED_HOMEWRECKER, cost.getCost());
                 // TODO: Need to add a Task that will cause the quest to be successful.
             }
         }
@@ -439,7 +445,7 @@ public class QuestGenerator
 	 * Allows the setting of a specific decay rate, since the default is normal
 	 * @param newRate the new rate to be used for the creation of relations
 	 */
-	public void setDecayRate(SocialNetworkDecayRates newRate) 
+	public static void setDecayRate(SocialNetworkDecayRates newRate) 
 	{
 		rate=newRate;
 	}

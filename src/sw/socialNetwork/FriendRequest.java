@@ -1,6 +1,7 @@
 package sw.socialNetwork;
 
 import sw.lifeform.NPC;
+import sw.socialNetwork.simulation.EventTypes;
 
 /**
  * 
@@ -35,6 +36,7 @@ public class FriendRequest
 		if (state == FriendRequestStatus.WAITING)
 		{
 			this.state = FriendRequestStatus.ACCEPTED;
+			requestee.newEvent(requester, EventTypes.FRIEND_REQUEST_ACCEPTED);	
 		}
 	}
 
@@ -46,6 +48,7 @@ public class FriendRequest
 		if (state == FriendRequestStatus.WAITING)
 		{
 			this.state = FriendRequestStatus.REJECTED;
+			requestee.newEvent(requester, EventTypes.FRIEND_REQUEST_REJECTED);
 		}
 	}
 
