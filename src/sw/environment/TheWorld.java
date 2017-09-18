@@ -151,6 +151,15 @@ public class TheWorld implements RoomObserver
     {
         return m_rooms.get(id);
     }
+    
+    /**
+     * Returns the number of rooms in the world
+     * @return
+     */
+    public int getSize()
+    {
+    	return m_rooms.size();
+    }
 
     /**
      * Moves a player from one room to another in the world.

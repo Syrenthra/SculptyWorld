@@ -216,6 +216,8 @@ public class TestNPC
         
         bob.setCategory(2);
         assertEquals(2,bob.getCategory());
+        bob.setDisTol(5.0);
+        assertEquals(5.0,bob.getDistTol(),error);
     }
 
     @Test
@@ -318,6 +320,7 @@ public class TestNPC
         SocialNetwork bobSocialNet = bob.getSocialNetwork();
         MockItem item = new MockItem();
         bob.addQuestItem(item);
+        bob.setDisTol(3);
 
         NPC bill = new NPC(1, "Bill", "He wears gloves.", 50, 5, 10, 1);
         SocialNetwork billSocialNetwork = bill.getSocialNetwork();
@@ -407,19 +410,27 @@ public class TestNPC
     {
         NPC bob = new NPC(0, "Bob", "He wears overalls.", 50, 5, 10, 1);
         SocialNetwork bobNetwork = bob.getSocialNetwork();
+        bob.setDisTol(4);
         NPC bill = new NPC(1, "Bill", "He wears gloves.", 50, 5, 10, 1);
         SocialNetwork billNetwork = bill.getSocialNetwork();
+        bill.setDisTol(4);
         NPC john = new NPC(2, "John", "He wears kilts.", 50, 5, 10, 1);
         SocialNetwork johnNetwork = john.getSocialNetwork();
+        john.setDisTol(4);
         NPC jane = new NPC(3, "Jane", "She wears large boots.", 50, 5, 10, 1);
         SocialNetwork janeNetwork = jane.getSocialNetwork();
+        jane.setDisTol(4);
         NPC jimmy = new NPC(4, "Jimmy", "He wears dumb shirts", 50, 5, 10, 1);
         SocialNetwork jimmyNetwork = jimmy.getSocialNetwork();
+        jimmy.setDisTol(4);
         NPC mike = new NPC(5, "Mike", "He wears hiking boots", 50, 5, 10, 1);
         SocialNetwork mikeNetwork = mike.getSocialNetwork();
+        mike.setDisTol(4);
 
         MockItem item = new MockItem();
         MockRoom room = new MockRoom(0, "Room", "Desc");
+        room.setCoord(0, 0);
+        
         MockFeelings bobForBill = new MockFeelings();
         MockFeelings bobForJohn = new MockFeelings();
         MockFeelings bobForJane = new MockFeelings();
@@ -1171,28 +1182,33 @@ public class TestNPC
     {
         NPC bob = new NPC(0, "Bob", "He wears overalls.", 50, 5, 10, 1);
         SocialNetwork bobNetwork = bob.getSocialNetwork();
+        bob.setDisTol(8);
         NPC bill = new NPC(1, "Bill", "He wears jeans.", 50, 5, 10, 1);
         NPC sandy = new NPC(2, "Sandy", "She wears bell bottoms.", 50, 5, 10, 1);
         NPC jane = new NPC(3, "Jane", "She wears thick gloves.", 50, 5, 10, 1);
         // Some rooms.
-        Room room3 = new Room(3, "Forest 1","This is a small forest.");
+        Room room3 = new Room(0, "Forest 1","This is a small forest.");
         room3.setZone(Zone.FOREST);
-        Room room4 = new Room(4, "Forest 2","This is a big forest.");
+        Room room4 = new Room(1, "Forest 2","This is a big forest.");
         room4.setZone(Zone.FOREST);
-        Room room5 = new Room(5, "Forest 3","This is a medium forest.");
+        Room room5 = new Room(2, "Forest 3","This is a medium forest.");
         room5.setZone(Zone.FOREST);
-        Room room6 = new Room(6, "Forest 4","This is a huge forest.");
+        Room room6 = new Room(3, "Forest 4","This is a huge forest.");
         room6.setZone(Zone.FOREST);
         // Add some exits, should not need to add these to TheWorld.
         room3.addExit(room4,Exit.EAST);
+        room3.setCoord(0, 0);
         
         room4.addExit(room3, Exit.WEST);
         room4.addExit(room5,Exit.EAST);
+        room4.setCoord(1, 0);
         
         room5.addExit(room4, Exit.WEST);
         room5.addExit(room6,Exit.EAST);
+        room5.setCoord(2, 0);
         
         room6.addExit(room5, Exit.WEST);
+        room6.setCoord(3, 0);
         
         TheWorld world= TheWorld.getInstance();
         
@@ -1481,6 +1497,9 @@ public class TestNPC
         
         daRoom.setZone(Zone.CITY);
         otherRoom.setZone(Zone.CITY);
+        daRoom.setCoord(0, 0);
+        otherRoom.setCoord(3, 3);
+        bob.setDisTol(3.0);
         
         world.addRoom(daRoom);
         world.addRoom(otherRoom);
@@ -1630,6 +1649,42 @@ public class TestNPC
 
         assertEquals(1, bob.getFavorRequests().size());
         assertEquals(SocialCapitolCost.MEDIUM, difficulty);
+    }
+    
+    /**
+     * Tests that adding a family member increases social capital and the relationship doesn't change
+     */
+    @Test
+    public void testFamilyNetwork()
+    {
+    	NPC bob = new NPC(0, "Bob", "He wears overalls.", 50, 5, 10, 1);
+        NPC bill = new NPC(0, "Bill", "He wears jeans.", 50, 5, 10, 1);
+        NPC dave = new NPC(0, "Dave", "He wears a hat.", 50, 5, 10, 1);
+        Feelings bobsFeels = new Feelings();
+        Feelings billsFeels = new Feelings();
+        Feelings familyFeels = new Feelings();
+        familyFeels.setIntimacy(5);
+        bob.getSocialNetwork().setControl(0.5);
+        bob.getFamilyNetwork().setControl(0.5);
+        
+        //Bob should have no social capital
+        assertEquals(0, bob.getSocialNetwork().getCurrentCapital());
+
+        //Bob and dave add each other as friends, on an update of capital, bob should have 35 capital
+        bob.getSocialNetwork().addFriend(bill, bobsFeels);
+        bill.getSocialNetwork().addFriend(bob, billsFeels);
+        
+        bob.updateCapital();
+        assertEquals(35, bob.getSocialNetwork().getCurrentCapital());
+        
+        /*Dave and Bob are family, updating capital after this should be 75, another 35 from Bill
+        * 5 from Dave
+        */
+        bob.getFamilyNetwork().addFriend(dave, familyFeels);
+        dave.getFamilyNetwork().addFriend(bob, familyFeels);
+        bob.updateCapital();
+        
+        assertEquals(75,bob.getSocialNetwork().getCurrentCapital());
     }
 
 }

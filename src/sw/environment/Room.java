@@ -1,5 +1,6 @@
 package sw.environment;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -43,6 +44,8 @@ public class Room implements TimeObserver, SpawnObserver, Goal
     protected String m_description;
 
     protected Zone m_zone;
+    //Used for the new location system
+    protected Point2D coord;
 
     protected Hashtable<Exit, Room> m_exits = new Hashtable<Exit, Room>();
 
@@ -73,6 +76,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
         m_title = title;
         m_description = description;
         m_zone = Zone.CITY;
+        coord= new Point2D.Double();
     }
 
     /**
@@ -91,6 +95,25 @@ public class Room implements TimeObserver, SpawnObserver, Goal
     public String getTitle()
     {
         return m_title;
+    }
+    
+    /**
+     * Sets the coordinate of the room
+     * @param x coord
+     * @param y coord
+     */
+    public void setCoord(double x, double y)
+    {
+    	coord.setLocation(x, y);
+    }
+    
+    /**
+     * Returns the X coord of the room
+     * @return
+     */
+    public Point2D getCoord()
+    {
+    	return coord;
     }
 
     /**
@@ -884,5 +907,7 @@ public class Room implements TimeObserver, SpawnObserver, Goal
        // Else we found nothing.
        return null;
     }
+    
+    
     
 }

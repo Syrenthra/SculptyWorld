@@ -237,6 +237,8 @@ public class TestTheWorld
         
         ArrayList<WorldZone> zones = TheWorld.getInstance().getNeighboringZones(room3);
         assertEquals(2,zones.size());
+        
+        assertEquals(7,TheWorld.getInstance().getSize());
     }
 
 }

@@ -25,6 +25,7 @@ import sw.environment.Zone;
 
 public class TestRoom
 {
+
     @Before
     public void before()
     {
@@ -51,6 +52,7 @@ public class TestRoom
         assertEquals(1,testRoom.getID());
         assertEquals(0,testRoom.getNumNPCs());
         assertEquals(0,testRoom.getNumCreatures());
+
         
         testRoom = new Room("Test Room2","This is a room too.");
         assertEquals("This is a room too.",testRoom.getDescription());
@@ -58,6 +60,22 @@ public class TestRoom
         assertEquals(-1,testRoom.getID());
         testRoom.setID(2);
         assertEquals(2,testRoom.getID());
+    }
+    
+    @Test
+    public void testCoordinates()
+    {
+    	double err=0.05;
+    	Room testRoom = new Room(1, "Test Room","This is a room.");
+    	Room testRoom2 = new Room(1, "Test Room2","This is another room.");
+        testRoom.setCoord(0, 0);
+        testRoom2.setCoord(20, 0);
+        
+        assertEquals(0, testRoom.getCoord().getX(),err);
+        assertEquals(0, testRoom.getCoord().getY(),err);
+        assertEquals(20, testRoom.getCoord().distance(testRoom2.getCoord()),err);
+        
+        
     }
     
     @Test

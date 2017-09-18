@@ -70,6 +70,11 @@ public class SocialNetwork
      * Only a broker can make friends with SNPCs that are not in the same room as it is
      */
     protected boolean isBrokerNode;
+    
+    /**
+     * boolean to know if its a family network so certain actions are skipped
+     */
+    protected boolean familyNet;
 
     public SocialNetwork(NPC npc, double control, double grumpiness, double personability, int desiredFriends, int desiredCapital)
     {

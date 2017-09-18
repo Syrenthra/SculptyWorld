@@ -81,6 +81,10 @@ public class NPC extends Lifeform implements RoomObserver
      */
     protected int giftCategory;
     
+    protected double distanceTolerance;
+    
+    SocialNetwork m_familyNetwork;
+    
     //The SNPC holds everything it does during its turn and then sends all the events to the simulation
   	protected ArrayList<SocialNetworkEvent> events;
 
@@ -108,6 +112,7 @@ public class NPC extends Lifeform implements RoomObserver
     protected ArrayList<NPC> favorRequests;
 
     SocialNetwork m_socialNetwork;
+    
 
     //Keeps track of the result of the most recently completed SocialQuest
     protected QuestState lastQuestResult;
@@ -132,6 +137,7 @@ public class NPC extends Lifeform implements RoomObserver
         m_speed = speed;
         
         giftCategory=-1;
+        distanceTolerance=-1;
         
         double control = 0.0;
         double grumpiness = 0.5;
@@ -141,6 +147,7 @@ public class NPC extends Lifeform implements RoomObserver
         
 
         m_socialNetwork = new SocialNetwork(this, control, grumpiness, personability, desiredFriends, desiredCapital);
+        m_familyNetwork = new SocialNetwork(this, control, grumpiness, personability, desiredFriends, desiredCapital);
 
         init();
     }
@@ -166,8 +173,10 @@ public class NPC extends Lifeform implements RoomObserver
         m_speed = speed;
         
         giftCategory=-1;
+        distanceTolerance=-1;
 
         m_socialNetwork = new SocialNetwork(this, personality);
+        m_familyNetwork = new SocialNetwork(this, personality);
         
         init();
 
@@ -385,30 +394,39 @@ public class NPC extends Lifeform implements RoomObserver
             ArrayList<Room> roomsList = new ArrayList<Room>();
             NPC[] npcsInCurrent;
             
-            WorldZone myZone = TheWorld.getInstance().getZone(m_currentRoom);
-             
-            Enumeration<Room> myZoneE = myZone.getRooms().elements();
-            while (myZoneE.hasMoreElements())
-            {
-                Room room = myZoneE.nextElement();
-                roomsList.add(room);
-            }
-            
-            //I am a broker, so I should select friends from this room and all adjacent
-            //zones also
-            if (m_socialNetwork.getIsBrokerNode())
-            {               
-                for (WorldZone zone : myZone.getNeighboringZones())
-                {
-                
-                    myZoneE = zone.getRooms().elements();
-                    while (myZoneE.hasMoreElements())
-                    {
-                        Room room = myZoneE.nextElement();
-                        roomsList.add(room);
-                    }
-                }
-            }
+            //WorldZone myZone = TheWorld.getInstance().getZone(m_currentRoom);
+             int roomNum = TheWorld.getInstance().getSize();
+             for(int i=0; i<roomNum;i++)
+             {
+            	 Room room=TheWorld.getInstance().getRoom(i);
+            	 double dist=m_currentRoom.getCoord().distance(room.getCoord());
+            	 if(distanceTolerance >= dist)
+            	 {
+            		 roomsList.add(room);
+            	 }
+             }
+//            Enumeration<Room> myZoneE = myZone.getRooms().elements();
+//            while (myZoneE.hasMoreElements())
+//            {
+//                Room room = myZoneE.nextElement();
+//                roomsList.add(room);
+//            }
+//            
+//            //I am a broker, so I should select friends from this room and all adjacent
+//            //zones also
+//            if (m_socialNetwork.getIsBrokerNode())
+//            {               
+//                for (WorldZone zone : myZone.getNeighboringZones())
+//                {
+//                
+//                    myZoneE = zone.getRooms().elements();
+//                    while (myZoneE.hasMoreElements())
+//                    {
+//                        Room room = myZoneE.nextElement();
+//                        roomsList.add(room);
+//                    }
+//                }
+//            }
 
             Iterator<Room> itr = roomsList.iterator();
             while (itr.hasNext())
@@ -620,8 +638,8 @@ public class NPC extends Lifeform implements RoomObserver
             relationships.get(relationshipsItr.next()).updateTime(name, time);
         }
         
-        m_socialNetwork.updateCapital();
-
+        updateCapital();
+        
         //mood change
         if (lastQuestResult != null)
         {
@@ -896,7 +914,21 @@ public class NPC extends Lifeform implements RoomObserver
          */
         lastQuestResult = null;
     }
-
+    
+    /**
+     * Update both social networks, add the family network capital to the social network's then
+     * clear the family networks back to 0. This allows possibility to add or remove family
+     * members between turns
+     */
+    public void updateCapital()
+    {
+    	m_socialNetwork.updateCapital();
+    	m_familyNetwork.updateCapital();
+    	int social=m_socialNetwork.getCurrentCapital();
+    	int family=m_familyNetwork.getCurrentCapital();
+    	m_socialNetwork.setCurrentCapital(social+family);
+    	m_familyNetwork.setCurrentCapital(0);
+    }
     @Override
     public String toString()
     {
@@ -1067,6 +1099,15 @@ public class NPC extends Lifeform implements RoomObserver
     public SocialNetwork getSocialNetwork()
     {
         return m_socialNetwork;
+    }
+    
+    /**
+     * Returns the social network that this NPC is apart of.
+     * @return
+     */
+    public SocialNetwork getFamilyNetwork()
+    {
+        return m_familyNetwork;
     }
 
     public ArrayList<Item> getQuestItems()
@@ -1265,6 +1306,25 @@ public class NPC extends Lifeform implements RoomObserver
 	public ArrayList<SocialNetworkEvent> getEvents()
 	{
 		return events;
+	}
+
+	/**
+	 * Sets the distance tolerance for the NPC
+	 * @param d distance the NPC will tolerate
+	 */
+	public void setDisTol(double d) 
+	{
+		distanceTolerance=d;
+	}
+
+	/**
+	 * Returns the distance tolerance value of the NPC
+	 * @return
+	 */
+	public double getDistTol() 
+	{
+		
+		return distanceTolerance;
 	}
 
 
