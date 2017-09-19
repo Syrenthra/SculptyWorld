@@ -408,22 +408,30 @@ public class TestNPC
     @Test
     public void testUpdateTime_QuestCreationPriorities()
     {
-        NPC bob = new NPC(0, "Bob", "He wears overalls.", 50, 5, 10, 1);
+    	int desiredFriends = 0;
+    	int desiredCapital = 0;
+    	double control = 0.0;
+    	double grumpiness = 0.5; 
+    	double personability =  1.0;
+	
+    	Personality pers = new Personality(control, grumpiness, personability, desiredFriends, desiredCapital);
+    	
+        NPC bob = new NPC(0, "Bob", "He wears overalls.", 50, 5, 10, 1, pers);
         SocialNetwork bobNetwork = bob.getSocialNetwork();
         bob.setDisTol(4);
-        NPC bill = new NPC(1, "Bill", "He wears gloves.", 50, 5, 10, 1);
+        NPC bill = new NPC(1, "Bill", "He wears gloves.", 50, 5, 10, 1, pers);
         SocialNetwork billNetwork = bill.getSocialNetwork();
         bill.setDisTol(4);
-        NPC john = new NPC(2, "John", "He wears kilts.", 50, 5, 10, 1);
+        NPC john = new NPC(2, "John", "He wears kilts.", 50, 5, 10, 1, pers);
         SocialNetwork johnNetwork = john.getSocialNetwork();
         john.setDisTol(4);
-        NPC jane = new NPC(3, "Jane", "She wears large boots.", 50, 5, 10, 1);
+        NPC jane = new NPC(3, "Jane", "She wears large boots.", 50, 5, 10, 1, pers);
         SocialNetwork janeNetwork = jane.getSocialNetwork();
         jane.setDisTol(4);
-        NPC jimmy = new NPC(4, "Jimmy", "He wears dumb shirts", 50, 5, 10, 1);
+        NPC jimmy = new NPC(4, "Jimmy", "He wears dumb shirts", 50, 5, 10, 1, pers);
         SocialNetwork jimmyNetwork = jimmy.getSocialNetwork();
         jimmy.setDisTol(4);
-        NPC mike = new NPC(5, "Mike", "He wears hiking boots", 50, 5, 10, 1);
+        NPC mike = new NPC(5, "Mike", "He wears hiking boots", 50, 5, 10, 1, pers);
         SocialNetwork mikeNetwork = mike.getSocialNetwork();
         mike.setDisTol(4);
 
