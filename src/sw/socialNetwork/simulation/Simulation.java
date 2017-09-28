@@ -15,6 +15,7 @@ import sw.item.Weapon;
 import sw.lifeform.NPC;
 import sw.lifeform.PC;
 import sw.quest.Quest;
+import sw.socialNetwork.Feelings;
 import sw.socialNetwork.Personality;
 import sw.quest.QuestGenerator;
 import sw.quest.TimedQuest;
@@ -46,6 +47,7 @@ public class Simulation
 	private boolean holesPresent;
 	private int networkCohesion; //1: loose, 2: medium, 3: strong
 	private int totalDesiredFriendships; //sum of all SNPCs' totalDesiredFriends
+	private int worldSize;
 	
 	private String fileName = "";
 	private String fileExt = ".xls";
@@ -84,6 +86,7 @@ public class Simulation
 		rand = new Random();
 		this.totalExperiments = numRepeats;
 		turnsPerExperiment = numTurns + 10;
+		worldSize=10;
 		
 		thePlayer = new PC(0, "Playerrr", "The player.", 50);
 		snpcs = new ArrayList<NPC>();
@@ -140,9 +143,55 @@ public class Simulation
 		TheWorld world = TheWorld.getInstance(false);
 		
 		//make a room
-		System.out.println("	Making main room...");
-		Room mainRoom = new Room(1, "Main room","This is the main room");
+		System.out.println("	Making rooms...");
+		int totalRooms=0;
+		
 		ArrayList<Room> rooms = new ArrayList<Room>();
+		for(int i=0; i<worldSize;i++)
+		{
+			for (int j=0;j<worldSize;j++)
+			{
+				Room room= new Room(totalRooms,"Room"+ j +","+i,"Room in World");
+				rooms.add(room);
+				room.setZone(Zone.PLAINS);
+				room.setCoord(j, i);
+				world.addRoom(room);
+				
+				/**
+				*	Add exits to rooms by creating the exits for both rooms when there is a room
+				*	adjacent. Will check to the west and then add the exit to both rooms respectively.
+				*	Will check for a room to the north, and add exits to both respectively.
+				*/
+				//West Check
+				if(totalRooms%worldSize!=0)
+				{
+					Room west=world.getRoom(totalRooms-1);
+					room.addExit(west, Exit.WEST);
+					west.addExit(room, Exit.EAST);
+				}
+				else
+				{
+					continue;
+				}
+				
+				//North Check
+				if(totalRooms>=worldSize)
+				{
+					Room north=world.getRoom(totalRooms-10);
+					room.addExit(north, Exit.NORTH);
+					north.addExit(room, Exit.SOUTH);
+				}
+				else
+				{
+					continue;
+				}
+			}
+		}
+		world.constructZoneGraph();
+		
+		/*
+		Room mainRoom = new Room(1, "Main room","This is the main room");
+		//ArrayList<Room> rooms = new ArrayList<Room>();
 		rooms.add(mainRoom);
 		mainRoom.setZone(Zone.CITY);
 		
@@ -191,6 +240,7 @@ public class Simulation
 			rooms.add(west);	
 			world.constructZoneGraph();
 		}
+		*/
 		
 		//make the quest generator for the SNPCs
 		System.out.println("	Create quest generator...");
@@ -243,12 +293,29 @@ public class Simulation
 		int desiredFriends;
 		int maxDesiredCapital = 6000;
 		int desiredCapital;
+		int maxGiftCat=3;
+		int maxDistTol=15;
+		int giftCategory;
+		double distanceTolerance;
 		double control;
 		double personability;
 		double grumpiness;
-				
+		
+		boolean newFam=true;
+		int famCurr=0;
+		int famDesire=0;
 		Personality pers;
+		Feelings famFeel;
+		
 		int roomToPlace = 0;
+		
+		/**
+		 * TODO: Figure out how much social capital family gives, can just set it, trust doesn't need set.
+		 * UPDATE: chose 20 so that a family of 2 gives enough capital to make 4 friendships from
+		 * family capital alone.
+		 */
+		famFeel = new Feelings();
+		famFeel.setIntimacy(20);
 		
 		for(int i = 0; i < population; i++)
 		{
@@ -261,13 +328,16 @@ public class Simulation
 			 * grumpiness
 			 * totalDesiredFriends
 			 * totalDesiredCapital
+			 * giftCategory
 			 */
-			
+			giftCategory= rand.nextInt(maxGiftCat);
+			distanceTolerance=rand.nextInt(maxDistTol);
 			desiredFriends = rand.nextInt(maxDesiredFriends) + 1;
 			desiredCapital = rand.nextInt((maxDesiredCapital / 500) + 1) * 500; //step in units of 500
 			control = ((double)(rand.nextInt(81) + 10)) / 100; //between 0.1 and 0.9
 			grumpiness = ((double)(rand.nextInt(81) + 10)) / 100; //between 0.1 and 0.9
 			personability = ((double)(rand.nextInt(81) + 10)) / 100; //between 0.1 and 0.9
+			
 			
 			totalDesiredFriendships += desiredFriends;
 			
@@ -283,14 +353,45 @@ public class Simulation
 			currentSNPC.addQuestItem(mace);
 
 			currentSNPC.setCurrentCapital(startingCapital);
-			id++;
-			numNPCs++;
+			currentSNPC.setCategory(giftCategory);
+			currentSNPC.setDisTol(distanceTolerance);
+
 			snpcs.add(currentSNPC);
 			world.addNPC(currentSNPC);
 			
-			
-			if(holesPresent)
+			if(newFam)
 			{
+				famDesire=rand.nextInt(5)+1;
+				newFam=false;
+			}
+			/*
+			 * Each time a new NPC is created, if we are still adding to a family, existing NPCs are
+			 * added to the new NPC's family and the new is added to the old. This is done
+			 * by iterating through the previous NPCs in the list.
+			 */
+			if(!newFam && famCurr<famDesire)
+			{
+				for(int f=famCurr;f>0;f--)
+				{
+					NPC fam= snpcs.get((id-f)-1);
+					fam.getFamilyNetwork().addFriend(currentSNPC,famFeel);
+					currentSNPC.getFamilyNetwork().addFriend(fam,famFeel);
+				}
+				famCurr++;
+				
+				if(famCurr==famDesire)
+				{
+					famCurr=0;
+					famDesire=0;
+					newFam=true;
+				}
+			}
+			
+			id++;
+			numNPCs++;			
+			
+			//if(holesPresent)
+			//{
 				//if this experiment requires structural holes, then split the SNPCs up
 				//evenly between rooms
 				
@@ -300,19 +401,19 @@ public class Simulation
 				room.addNPC(currentSNPC);
 				
 				//first SNPC in each room is the broker
-				if (room.getNPCs().length == 1)
+				/*if (room.getNPCs().length == 1)
 				{
 					currentSNPC.getSocialNetwork().setIsBrokerNode(true);
-				}
+				}*/
 				
 				roomToPlace++;
-				roomToPlace = roomToPlace % rooms.size();
-			}else
+				//roomToPlace = roomToPlace % rooms.size();
+			/*}else
 			{
 				//otherwise, just put them all in the main room
 				mainRoom.addRoomObserver(currentSNPC);
 				mainRoom.addNPC(currentSNPC);
-			}
+			}*/
 			world.constructZoneGraph();
 		}
 		

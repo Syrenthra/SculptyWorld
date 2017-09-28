@@ -408,6 +408,7 @@ public class TestNPC
     @Test
     public void testUpdateTime_QuestCreationPriorities()
     {
+    	TheWorld.reset();
     	int desiredFriends = 0;
     	int desiredCapital = 0;
     	double control = 0.0;
@@ -458,7 +459,7 @@ public class TestNPC
         room.addNPC(jimmy);
         room.addNPC(mike);
         
-        TheWorld world= TheWorld.getInstance();
+        TheWorld world= TheWorld.getInstance(false);
         
         room.setZone(Zone.BEACH);
         
@@ -471,19 +472,22 @@ public class TestNPC
         world.addNPC(mike);
         world.constructZoneGraph();
 
-        bobNetwork.addFriend(bill, bobForBill);
-        bobNetwork.addFriend(john, bobForJohn);
-        bobNetwork.addFriend(jane, bobForJane);
-        bobNetwork.addFriend(mike, bobForMike);
-        billNetwork.addFriend(bob);
-        johnNetwork.addFriend(bob);
-        janeNetwork.addFriend(bob);
+//        bobNetwork.addFriend(bill, bobForBill);
+//        bobNetwork.addFriend(john, bobForJohn);
+//        bobNetwork.addFriend(jane, bobForJane);
+//        bobNetwork.addFriend(mike, bobForMike);
+//        billNetwork.addFriend(bob);
+//        johnNetwork.addFriend(bob);
+//        janeNetwork.addFriend(bob);
+//        mikeNetwork.addFriend(bob);
+        janeNetwork.setCurrentCapital(39);
+        jane.getSocialNetwork().setCurrentCapital(49);
 
         bobNetwork.setCurrentCapital(500);
         bobNetwork.setTotalDesiredCapital(5000);
         bobNetwork.setTotalDesiredFriends(5);
         bobForBill.setSocialDebtOwed(750);
-        johnNetwork.getRelationships().get(bob).setSocialDebtOwed(500);
+//        johnNetwork.getRelationships().get(bob).setSocialDebtOwed(500);
 
         bobForBill.setTrust(3);
         bobForBill.setIntimacy(50);
@@ -493,7 +497,17 @@ public class TestNPC
         bobForJane.setIntimacy(80);
         bobForMike.setTrust(-1);
         bobForMike.setIntimacy(15);
+        
+        bobNetwork.addFriend(bill, bobForBill);
+        bobNetwork.addFriend(john, bobForJohn);
+        bobNetwork.addFriend(jane, bobForJane);
+        bobNetwork.addFriend(mike, bobForMike);
+        billNetwork.addFriend(bob);
+        johnNetwork.addFriend(bob);
+        janeNetwork.addFriend(bob);
+      //  mikeNetwork.addFriend(bob);
 
+        johnNetwork.getRelationships().get(bob).setSocialDebtOwed(500);
         bill.askFavor(bob);
 
         /********************************************************************
@@ -712,6 +726,8 @@ public class TestNPC
 
         //At some point, Bob made a quest targeting Mike. This quest should be removed when Bob
         //terminates his relationship with Mike.
+//        System.out.println(""+bobNetwork.getCurrentCapital()+"Is what I have to make a quest");
+        bobNetwork.setCurrentCapital(500);
         TimedQuest quest = QuestGenerator.genFavorQuest(bob, mike);
         bob.addQuest(quest);
 
@@ -719,7 +735,7 @@ public class TestNPC
         //to be friends with Mike
         bobForMike.setIntimacy(1);
         bobNetwork.setControl(0.0);//Bob will not gain any social capital this turn
-        bobNetwork.setCurrentCapital(500);
+        //bobNetwork.setCurrentCapital(500);
 
         bob.updateTime(socialClock, 0);
         quest.updateTime(questClock, 0);
