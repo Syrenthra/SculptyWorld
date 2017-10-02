@@ -105,7 +105,7 @@ public class Simulation
 		{
 			coh = "strong";
 		}
-		fileName = coh + "_" + holes + "_" + (int)(questSuccessRate * 100);		
+		fileName = "Baseline_" +coh + "_" + holes + "_" + (int)(questSuccessRate * 100);		
 		
 		try
 		{
@@ -263,8 +263,8 @@ public class Simulation
 			 * totalDesiredCapital
 			 */
 			
-			desiredFriends = rand.nextInt(maxDesiredFriends + 1);
-			desiredCapital = rand.nextInt((maxDesiredCapital / 1000) + 1) * 1000; //step in units of 1000
+			desiredFriends = rand.nextInt(maxDesiredFriends)+1;
+			desiredCapital = rand.nextInt((maxDesiredCapital / 500) + 1) * 500; //step in units of 500
 			control = ((double)(rand.nextInt(81) + 10)) / 100; //between 0.1 and 0.9
 			grumpiness = ((double)(rand.nextInt(81) + 10)) / 100; //between 0.1 and 0.9
 			personability = ((double)(rand.nextInt(81) + 10)) / 100; //between 0.1 and 0.9

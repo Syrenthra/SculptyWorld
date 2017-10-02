@@ -23,7 +23,7 @@ public class TestSimulation
 	@Test
 	public void testRunFullExperiments()
 	{
-		boolean holesPresent[] = { false, true };
+		boolean holesPresent[] = { false};
 		int networkCohesion[] = { 1, 2, 3 };
 		double questSuccessRate[] = { 0.5, 0.75, 1.0 };
 
@@ -36,11 +36,11 @@ public class TestSimulation
 
 		for (curCohesion = 0; curCohesion < 3; curCohesion++)
 		{
-			for (curHoles = 0; curHoles < 2; curHoles++)
+			for (curHoles = 0; curHoles < 1; curHoles++)
 			{
 				for(curSuccessRate = 0; curSuccessRate < 3; curSuccessRate++)
 				{
-					Simulation sim = new Simulation(30, 1000, 50, networkCohesion[curCohesion], 
+					Simulation sim = new Simulation(100, 1000, 50, networkCohesion[curCohesion], 
 							holesPresent[curHoles], questSuccessRate[curSuccessRate], expNum);
 					expNum++;
 					
